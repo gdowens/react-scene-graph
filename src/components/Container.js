@@ -22,7 +22,7 @@ const sceneTarget = {
     let x = Math.round(item.x + delta.x);
     let y = Math.round(item.y + delta.y);
 
-    props.updateScene(item.id, {x, y})
+    props.updateScene(item.id, { x, y })
   }
 };
 
@@ -30,6 +30,9 @@ class Container extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
     connections: PropTypes.object,
+    onDragConnectionEnd: PropTypes.func.isRequired,
+    onDragSceneEnd: PropTypes.func.isRequired,
+    updateScene: PropTypes.func.isRequired,
     scenes: PropTypes.object,
   };
 
@@ -42,9 +45,19 @@ class Container extends Component {
     draggedScene: {},
   };
 
-  toggleIsDragging = (scene) => {
+  toggleIsSceneDragging = (draggedScene, isStartingDrag) => {
+    const { onDragSceneEnd } = this.props;
+
+    if (!isStartingDrag) {
+      const sceneDelta = {
+        x: draggedScene.x - this.state.draggedScene.x,
+        y: draggedScene.y - this.state.draggedScene.y,
+      };
+      onDragSceneEnd(draggedScene, sceneDelta);
+    }
+
     this.setState({
-      draggedScene: scene,
+      draggedScene: isStartingDrag ? draggedScene : {},
     });
   }
 
@@ -58,21 +71,22 @@ class Container extends Component {
     }
     return <Connection
       key={key}
-      startingScene={fromScene}
+      startX={connection.startX}
+      startY={connection.startY}
       endingScene={toScene}
     />
   }
 
   renderDraggableScene(scene, key) {
-    const { renderScene } = this.props
+    const { onDragConnectionEnd, renderScene } = this.props
     return (
       <DraggableScene
         key={key}
         id={key}
-        onDragChange={this.toggleIsDragging}
+        onDragConnectionEnd={onDragConnectionEnd}
+        onSceneDragChange={this.toggleIsSceneDragging}
         renderScene={renderScene}
         scene={scene}
-        {...scene}
       />
     );
   }

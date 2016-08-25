@@ -5,13 +5,16 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import CustomDragLayer from './CustomDragLayer'
 import Container from './Container'
 import update from 'react/lib/update';
-import Perf from 'react-addons-perf';
-window.Perf = Perf;
 
 class Noodlegraph extends Component {
   static propTypes = {
-    style: PropTypes.object,
     items: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    onDragConnectionStart: PropTypes.func.isRequired,
+    onDragConnectionEnd: PropTypes.func.isRequired,
+    onDragSceneStart: PropTypes.func.isRequired,
+    onDragSceneEnd: PropTypes.func.isRequired,
+    style: PropTypes.object,
   }
 
   static defaultProps = {
@@ -33,19 +36,21 @@ class Noodlegraph extends Component {
   }
 
   render() {
-    const { onChange, renderScene, data, canvasDimensions } = this.props
+    const { containerStyle, data, onDragConnectionEnd, onDragSceneEnd, renderScene } = this.props
     return (
-      <div style={this.props.containerStyle}>
+      <div style={containerStyle}>
         <Container
           connections={data.connections}
-          renderScene={this.props.renderScene}
+          onDragConnectionEnd={onDragConnectionEnd}
+          onDragSceneEnd={onDragSceneEnd}
+          renderScene={renderScene}
           scenes={data.scenes}
           updateScene={this.handleUpdateScene}
           viewport={data.viewport}
         />
         <CustomDragLayer
           connections={data.connections}
-          renderScene={this.props.renderScene}
+          renderScene={renderScene}
           scenes={data.scenes}
           viewport={data.viewport}
         />

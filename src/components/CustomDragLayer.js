@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { DragLayer } from 'react-dnd';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
+import SceneHeader from './SceneHeader';
 import SVGComponent from './SVGComponent';
 
 const layerStyles = {
@@ -66,32 +67,48 @@ class CustomDragLayer extends Component {
     }),
     isDragging: PropTypes.bool.isRequired,
     item: PropTypes.object,
+    itemType: PropTypes.string,
+    renderScene: PropTypes.func.isRequired,
     scenes: PropTypes.object,
     viewport: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
     connections: {},
+    item: {},
+    itemType: "",
+    scenes: {},
   };
 
   renderConnection(connection, key) {
-    const { currentOffset, initialOffset } = this.props;
+    const { currentOffset, initialOffset, item } = this.props;
     if (!initialOffset || !currentOffset) {
       return null;
     }
+
     const fromScene = getModifiedScene(this.props, connection.from);
     const toScene = getModifiedScene(this.props, connection.to);
+    const startX = item.id === toScene.id ? connection.startX : connection.startX + currentOffset.x - initialOffset.x;
+    const startY = item.id === toScene.id ? connection.startY : connection.startY + currentOffset.y - initialOffset.y;
     return <Connection
       key={key}
-      startingScene={fromScene}
+      startX={startX}
+      startY={startY}
       endingScene={toScene}
     />
   }
 
   render() {
-    const { connections, isDragging, item, renderScene, viewport } = this.props;
+    const {
+      connections,
+      isDragging,
+      item,
+      itemType,
+      renderScene,
+      viewport
+    } = this.props;
 
-    if (!isDragging) {
+    if (!isDragging || itemType !== ItemTypes.SCENE) {
       return null;
     }
 
@@ -99,10 +116,11 @@ class CustomDragLayer extends Component {
       return [connection.from, connection.to].includes(item.id);
     });
 
-    const itemStyle = getItemStyles(this.props)
+    const itemStyle = getItemStyles(this.props);
     return (
       <div style={layerStyles}>
         <div style={itemStyle}>
+          <SceneHeader scene={item}/>
           {renderScene(item)}
         </div>
         <SVGComponent width={viewport.width} height={viewport.height}>
@@ -117,6 +135,7 @@ class CustomDragLayer extends Component {
 
 export default DragLayer(monitor => ({
   item: monitor.getItem(),
+  itemType: monitor.getItemType(),
   initialOffset: monitor.getInitialSourceClientOffset(),
   currentOffset: monitor.getSourceClientOffset(),
   isDragging: monitor.isDragging()

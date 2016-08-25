@@ -6,26 +6,24 @@ import TextPath from './TextPath';
 export default class Connection extends Component {
 
     static propTypes = {
-        startingScene: PropTypes.object.isRequired,
+        startX: PropTypes.number.isRequired,
+        startY: PropTypes.number.isRequired,
         endingScene: PropTypes.object.isRequired,
     };
 
     render() {
-        const { startingScene, endingScene } = this.props;
+        const { startX, startY, endingScene } = this.props;
 
-        const x1 = startingScene.x + startingScene.width / 2;
-        const y1 = startingScene.y + startingScene.height / 2;
         const x2 = endingScene.x + endingScene.width / 2;
         const y2 = endingScene.y + endingScene.height / 2;
-
-        const lineId = `${x1}${x2}`;
+        const lineId = `${startX}${x2}`;
 
         return (
             <SVGComponent>
                 <Line
                     id={lineId}
-                    x1={x1}
-                    y1={y1}
+                    x1={startX}
+                    y1={startY}
                     x2={x2}
                     y2={y2}
                     strokeWidth="3"
