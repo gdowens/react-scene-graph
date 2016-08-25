@@ -33,7 +33,7 @@ class Noodlegraph extends Component {
   }
 
   render() {
-    const {onChange, renderScene, data, canvasDimensions} = this.props
+    const { onChange, renderScene, data, canvasDimensions } = this.props
     return (
       <div style={this.props.containerStyle}>
         <Container
@@ -43,9 +43,12 @@ class Noodlegraph extends Component {
           updateScene={this.handleUpdateScene}
           viewport={data.viewport}
         />
-        {
-          <CustomDragLayer renderScene={this.props.renderScene} />
-        }
+        <CustomDragLayer
+          connections={data.connections}
+          renderScene={this.props.renderScene}
+          scenes={data.scenes}
+          viewport={data.viewport}
+        />
       </div>
     )
   }

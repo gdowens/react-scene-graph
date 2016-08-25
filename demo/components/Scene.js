@@ -5,8 +5,8 @@ const getStyles = (width, height, isDragging) => {
   return {
     width: `${width}px`,
     height: `${height}px`,
-    backgroundColor: 'black',
-    border: '1px solid black',
+    backgroundColor: 'white',
+    border: isDragging ? '1px solid red' : '1px solid black',
   }
 }
 

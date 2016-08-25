@@ -47,6 +47,7 @@ class Demo extends Component {
         data={this.state}
         onChange={this.handleChange}
         renderScene={this.renderScene}
+        showConnections={false}
       />
     )
   }

@@ -3,8 +3,6 @@ import shouldPureComponentUpdate from '../utils/shouldPureComponentUpdate';
 import ItemTypes from '../constants/ItemTypes';
 import { DragSource, DropTarget } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import shallowDiff from '../utils/shallowDiff';
-import deepDiff from '../utils/deepDiff';
 import _ from 'lodash';
 
 const sceneSource = {
@@ -22,10 +20,7 @@ const connectionTarget = {
     let x = Math.round(item.x + delta.x);
     let y = Math.round(item.y + delta.y);
 
-    props.updateScene(item.id, {
-      x,
-      y,
-    })
+    props.updateScene(item.id, {x, y});
   }
 }
 
@@ -47,6 +42,7 @@ class DraggableScene extends Component {
     connectDragPreview: PropTypes.func.isRequired,
     isDragging: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired,
+    onDragChange: PropTypes.func.isRequired,
     scene: PropTypes.object.isRequired,
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
@@ -56,6 +52,14 @@ class DraggableScene extends Component {
     // Use empty image as a drag preview so browsers don't draw it
     // and we can draw whatever we want on the custom drag layer instead.
     this.props.connectDragPreview(getEmptyImage());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { isDragging, onDragChange, scene } = this.props;
+    if (isDragging !== nextProps.isDragging) {
+      const draggedScene = nextProps.isDragging ? scene : {};
+      onDragChange(draggedScene);
+    }
   }
 
   render() {
