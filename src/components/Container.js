@@ -37,8 +37,8 @@ class Container extends Component {
   };
 
   static defaultProps = {
-    scenes: {},
     connections: {},
+    scenes: {},
   };
 
   state = {

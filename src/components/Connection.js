@@ -8,14 +8,16 @@ export default class Connection extends Component {
     static propTypes = {
         startX: PropTypes.number.isRequired,
         startY: PropTypes.number.isRequired,
-        endingScene: PropTypes.object.isRequired,
+        endX: PropTypes.number,
+        endY: PropTypes.number,
+        endingScene: PropTypes.object,
     };
 
     render() {
-        const { startX, startY, endingScene } = this.props;
+        const { startX, startY, endX, endY, endingScene } = this.props;
 
-        const x2 = endingScene.x + endingScene.width / 2;
-        const y2 = endingScene.y + endingScene.height / 2;
+        const x2 = endX ? endX : endingScene.x + endingScene.width / 2;
+        const y2 = endY ? endY : endingScene.y + endingScene.height / 2;
         const lineId = `${startX}${x2}`;
 
         return (

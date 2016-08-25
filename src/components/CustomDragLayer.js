@@ -17,14 +17,9 @@ const layerStyles = {
 };
 
 function getItemStyles(props) {
-  const { initialOffset, currentOffset } = props;
-  if (!initialOffset || !currentOffset) {
-    return {
-      display: 'none'
-    };
-  }
+  const { initialSourceOffset, currentSourceOffset } = props;
 
-  let { x, y } = currentOffset;
+  let { x, y } = currentSourceOffset;
 
   const transform = `translate(${x}px, ${y}px)`;
   return {
@@ -35,17 +30,17 @@ function getItemStyles(props) {
 }
 
 function getModifiedScene(props, id) {
-  const { currentOffset, initialOffset, item, scenes } = props;
+  const { currentSourceOffset, initialSourceOffset, item, scenes } = props;
 
-  if (!initialOffset || !currentOffset) {
+  if (!initialSourceOffset || !currentSourceOffset) {
     return item;
   }
 
   if (id === item.id) {
     return {
       ...item,
-      x: currentOffset.x,
-      y: currentOffset.y,
+      x: currentSourceOffset.x,
+      y: currentSourceOffset.y,
     };
   } else {
     return {
@@ -59,9 +54,17 @@ class CustomDragLayer extends Component {
     connections: PropTypes.object,
     currentOffset: PropTypes.shape({
       x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }),
+    currentSourceOffset: PropTypes.shape({
+      x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired
     }),
-    initialOffset: PropTypes.shape({
+    initalOffset: PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }),
+    initialSourceOffset: PropTypes.shape({
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired
     }),
@@ -81,15 +84,19 @@ class CustomDragLayer extends Component {
   };
 
   renderConnection(connection, key) {
-    const { currentOffset, initialOffset, item } = this.props;
-    if (!initialOffset || !currentOffset) {
-      return null;
-    }
+    const { currentSourceOffset, initialSourceOffset, item } = this.props;
 
     const fromScene = getModifiedScene(this.props, connection.from);
     const toScene = getModifiedScene(this.props, connection.to);
-    const startX = item.id === toScene.id ? connection.startX : connection.startX + currentOffset.x - initialOffset.x;
-    const startY = item.id === toScene.id ? connection.startY : connection.startY + currentOffset.y - initialOffset.y;
+    const itemIsTarget = item.id === toScene.id;
+    const xDelta = currentSourceOffset.x - initialSourceOffset.x;
+    const yDelta = currentSourceOffset.y - initialSourceOffset.y;
+    const startX = itemIsTarget ?
+      connection.startX :
+      connection.startX + xDelta;
+    const startY = itemIsTarget ?
+      connection.startY :
+      connection.startY + yDelta;
     return <Connection
       key={key}
       startX={startX}
@@ -98,18 +105,41 @@ class CustomDragLayer extends Component {
     />
   }
 
+  renderConnectionBeingDragged = () => {
+    const { currentOffset, initialOffset, viewport } = this.props;
+
+    return (
+      <div style={layerStyles}>
+        <SVGComponent width={viewport.width} height={viewport.height}>
+          <Connection
+            startX={initialOffset.x}
+            startY={initialOffset.y}
+            endX={currentOffset.x}
+            endY={currentOffset.y}
+          />
+        </SVGComponent>
+      </div>
+    );
+  }
+
   render() {
     const {
       connections,
+      currentSourceOffset,
       isDragging,
+      initialSourceOffset,
       item,
       itemType,
       renderScene,
-      viewport
+      viewport,
     } = this.props;
 
-    if (!isDragging || itemType !== ItemTypes.SCENE) {
+    if (!isDragging || !currentSourceOffset || !initialSourceOffset) {
       return null;
+    }
+
+    if(itemType === ItemTypes.CONNECTION) {
+      return this.renderConnectionBeingDragged();
     }
 
     const connectionsInMotion = _.filter(connections, (connection) => {
@@ -136,7 +166,9 @@ class CustomDragLayer extends Component {
 export default DragLayer(monitor => ({
   item: monitor.getItem(),
   itemType: monitor.getItemType(),
-  initialOffset: monitor.getInitialSourceClientOffset(),
-  currentOffset: monitor.getSourceClientOffset(),
+  initialOffset: monitor.getInitialClientOffset(),
+  initialSourceOffset: monitor.getInitialSourceClientOffset(),
+  currentOffset: monitor.getClientOffset(),
+  currentSourceOffset: monitor.getSourceClientOffset(),
   isDragging: monitor.isDragging()
 }))(CustomDragLayer)
