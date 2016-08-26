@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import update from 'react/lib/update';
 import _ from 'lodash';
 import Noodlegraph from '../src';
 import Scene from './components/Scene';
-import update from 'react/lib/update';
+import SceneHeader from './components/SceneHeader';
 
 let counter = 0;
 
@@ -27,7 +28,11 @@ class Demo extends Component {
     this.setState({...data});
   }
 
-  handleDragConnectionStart = (data) => {
+  handleDragConnectionStart = (sourceScene, relativeClickLoc) => {
+    return {
+      x: sourceScene.x + sourceScene.width,
+      y: sourceScene.y,
+    };
   }
 
   handleDragSceneStart = (data) => {
@@ -66,10 +71,18 @@ class Demo extends Component {
     counter++;
   }
 
-  renderScene = (sceneData) => {
+  renderScene = (scene) => {
     return (
-      <div key={sceneData.id}>
-        <Scene {...sceneData}/>
+      <div key={scene.id}>
+        <Scene {...scene}/>
+      </div>
+    );
+  }
+
+  renderSceneHeader = (scene) => {
+    return (
+      <div key={`${scene.id}header`}>
+        <SceneHeader scene={scene}/>
       </div>
     );
   }
@@ -85,6 +98,7 @@ class Demo extends Component {
         onDragSceneStart={this.handleDragSceneStart}
         onDragSceneEnd={this.handleDragSceneEnd}
         renderScene={this.renderScene}
+        renderSceneHeader={this.renderSceneHeader}
         showConnections={false}
       />
     )

@@ -14,6 +14,8 @@ class Noodlegraph extends Component {
     onDragConnectionEnd: PropTypes.func.isRequired,
     onDragSceneStart: PropTypes.func.isRequired,
     onDragSceneEnd: PropTypes.func.isRequired,
+    renderScene: PropTypes.func.isRequired,
+    renderSceneHeader: PropTypes.func.isRequired,
     style: PropTypes.object,
   }
 
@@ -36,14 +38,25 @@ class Noodlegraph extends Component {
   }
 
   render() {
-    const { containerStyle, data, onDragConnectionEnd, onDragSceneEnd, renderScene } = this.props
+    const {
+      containerStyle,
+      data,
+      onDragConnectionEnd,
+      onDragConnectionStart,
+      onDragSceneEnd,
+      renderScene,
+      renderSceneHeader,
+    } = this.props
+
     return (
       <div style={containerStyle}>
         <Container
           connections={data.connections}
           onDragConnectionEnd={onDragConnectionEnd}
+          onDragConnectionStart={onDragConnectionStart}
           onDragSceneEnd={onDragSceneEnd}
           renderScene={renderScene}
+          renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}
           updateScene={this.handleUpdateScene}
           viewport={data.viewport}
@@ -51,6 +64,7 @@ class Noodlegraph extends Component {
         <CustomDragLayer
           connections={data.connections}
           renderScene={renderScene}
+          renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}
           viewport={data.viewport}
         />

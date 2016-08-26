@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { DragLayer } from 'react-dnd';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
-import SceneHeader from './SceneHeader';
 import SVGComponent from './SVGComponent';
 
 const layerStyles = {
@@ -72,6 +71,7 @@ class CustomDragLayer extends Component {
     item: PropTypes.object,
     itemType: PropTypes.string,
     renderScene: PropTypes.func.isRequired,
+    renderSceneHeader: PropTypes.func.isRequired,
     scenes: PropTypes.object,
     viewport: PropTypes.object.isRequired,
   };
@@ -131,6 +131,7 @@ class CustomDragLayer extends Component {
       item,
       itemType,
       renderScene,
+      renderSceneHeader,
       viewport,
     } = this.props;
 
@@ -150,7 +151,7 @@ class CustomDragLayer extends Component {
     return (
       <div style={layerStyles}>
         <div style={itemStyle}>
-          <SceneHeader scene={item}/>
+          {renderSceneHeader(item)}
           {renderScene(item)}
         </div>
         <SVGComponent width={viewport.width} height={viewport.height}>

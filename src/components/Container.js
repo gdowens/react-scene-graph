@@ -31,9 +31,12 @@ class Container extends Component {
     connectDropTarget: PropTypes.func.isRequired,
     connections: PropTypes.object,
     onDragConnectionEnd: PropTypes.func.isRequired,
+    onDragConnectionStart: PropTypes.func.isRequired,
     onDragSceneEnd: PropTypes.func.isRequired,
-    updateScene: PropTypes.func.isRequired,
+    renderScene: PropTypes.func.isRequired,
+    renderSceneHeader: PropTypes.func.isRequired,
     scenes: PropTypes.object,
+    updateScene: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -78,14 +81,22 @@ class Container extends Component {
   }
 
   renderDraggableScene(scene, key) {
-    const { onDragConnectionEnd, renderScene } = this.props
+    const {
+      onDragConnectionEnd,
+      onDragConnectionStart,
+      renderScene,
+      renderSceneHeader,
+    } = this.props;
+
     return (
       <DraggableScene
         key={key}
         id={key}
         onDragConnectionEnd={onDragConnectionEnd}
+        onDragConnectionStart={onDragConnectionStart}
         onSceneDragChange={this.toggleIsSceneDragging}
         renderScene={renderScene}
+        renderSceneHeader={renderSceneHeader}
         scene={scene}
       />
     );
