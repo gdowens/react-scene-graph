@@ -8,6 +8,7 @@ class SceneBase extends Component {
     canDrag: PropTypes.bool.isRequired,
     connectConnectionDragPreview: PropTypes.func.isRequired,
     connectConnectionDragSource: PropTypes.func.isRequired,
+    onTargetlessConnectionDrop: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     scene: PropTypes.object.isRequired,
   };
@@ -28,11 +29,19 @@ class SceneBase extends Component {
 }
 
 const connectionSource = {
-  beginDrag(props, monitor) {
+  beginDrag(props) {
     return {...props.scene};
   },
-  canDrag(props, monitor) {
+  canDrag(props) {
     return props.canDrag;
+  },
+  endDrag(props, monitor, component) {
+    console.log("monitor", monitor.didDrop());
+    console.log(monitor.getItem());
+    console.log(monitor.getItemType());
+    if (!monitor.didDrop()) {
+      props.onTargetlessConnectionDrop(monitor.getItem().id);
+    }
   },
 };
 
@@ -41,4 +50,8 @@ const dragConnectionCollect = (connect, monitor) => ({
   connectConnectionDragSource: connect.dragSource(),
 });
 
-export default DragSource(ItemTypes.CONNECTION, connectionSource, dragConnectionCollect)(SceneBase);
+export default DragSource(
+  ItemTypes.CONNECTION,
+  connectionSource,
+  dragConnectionCollect
+)(SceneBase);

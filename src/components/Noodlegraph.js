@@ -37,6 +37,18 @@ class Noodlegraph extends Component {
     }));
   }
 
+  handleRemoveConnection = (id) => {
+    const { connections } = this.props.data;
+
+    console.log("removing", id);
+
+    this.props.onChange(update(this.props.data, {
+      connections: {
+        $set: _.omit(connections, id),
+      },
+    }));
+  }
+
   render() {
     const {
       containerStyle,
@@ -55,6 +67,7 @@ class Noodlegraph extends Component {
           onDragConnectionEnd={onDragConnectionEnd}
           onDragConnectionStart={onDragConnectionStart}
           onDragSceneEnd={onDragSceneEnd}
+          onTargetlessConnectionDrop={this.handleRemoveConnection}
           renderScene={renderScene}
           renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}

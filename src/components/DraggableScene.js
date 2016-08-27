@@ -8,22 +8,15 @@ import SceneHeader from './SceneHeader';
 class DraggableScene extends Component {
   static propTypes = {
     connectionLocation: PropTypes.object,
+    draggedScene: PropTypes.object.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
     onDragConnectionEnd: PropTypes.func.isRequired,
     onSceneDragChange: PropTypes.func.isRequired,
+    onTargetlessConnectionDrop: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
     scene: PropTypes.object.isRequired,
   };
-
-  state = {
-    isSceneDragging: false,
-  };
-
-  handleSceneDragChange = (sceneId, isSceneDragging) => {
-    this.setState({isSceneDragging});
-    this.props.onSceneDragChange(sceneId, isSceneDragging);
-  }
 
   handleSceneMouseDown = (event) => {
     const { onDragConnectionStart, scene } = this.props;
@@ -36,14 +29,15 @@ class DraggableScene extends Component {
     const {
       connectDropTarget,
       connectionLocation,
+      draggedScene,
+      onSceneDragChange,
+      onTargetlessConnectionDrop,
       renderScene,
       renderSceneHeader,
       scene,
     } = this.props;
 
-    const { isSceneDragging } = this.state;
-
-    if(isSceneDragging) {
+    if(draggedScene.id === scene.id) {
       return null;
     }
 
@@ -60,7 +54,7 @@ class DraggableScene extends Component {
           key={`${scene.id}header`}
           renderSceneHeader={renderSceneHeader}
           scene={scene}
-          onSceneDragChange={this.handleSceneDragChange}
+          onSceneDragChange={onSceneDragChange}
         />
         <div onMouseDown={this.handleSceneMouseDown}>
           <Scene
@@ -68,7 +62,7 @@ class DraggableScene extends Component {
             key={scene.id}
             renderScene={renderScene}
             scene={scene} 
-            onConnectionDragChange={this.handleConnectionDragChange}
+            onTargetlessConnectionDrop={onTargetlessConnectionDrop}
           />
         </div>
       </div>

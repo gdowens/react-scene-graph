@@ -55,4 +55,8 @@ const dragSceneCollect = (connect, monitor) => ({
   sceneClientOffset: monitor.getClientOffset(),
 });
 
-export default DragSource(ItemTypes.SCENE, sceneSource, dragSceneCollect)(SceneHeaderBase);
+export default DragSource(
+  ItemTypes.SCENE,
+  sceneSource,
+  dragSceneCollect
+)(SceneHeaderBase);

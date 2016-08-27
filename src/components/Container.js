@@ -8,12 +8,6 @@ import DraggableScene from './DraggableScene';
 import Line from './Line';
 import SVGComponent from './SVGComponent';
 
-const styles = {
-  position: 'relative',
-  width: '100%',
-  height: '100%',
-};
-
 const sceneTarget = {
   drop(props, monitor, component) {
     const delta = monitor.getDifferenceFromInitialOffset();
@@ -33,6 +27,7 @@ class Container extends Component {
     onDragConnectionEnd: PropTypes.func.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
     onDragSceneEnd: PropTypes.func.isRequired,
+    onTargetlessConnectionDrop: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
     scenes: PropTypes.object,
@@ -100,19 +95,22 @@ class Container extends Component {
     const {
       onDragConnectionEnd,
       onDragConnectionStart,
+      onTargetlessConnectionDrop,
       renderScene,
       renderSceneHeader,
     } = this.props;
 
-    const { currentConnectionOrigin } = this.state;
+    const { draggedScene, currentConnectionOrigin } = this.state;
 
     return (
       <DraggableScene
         connectionLocation={currentConnectionOrigin}
+        draggedScene={draggedScene}
         key={key}
         onDragConnectionEnd={onDragConnectionEnd}
         onDragConnectionStart={this.handleDragConnectionStart}
         onSceneDragChange={this.toggleIsSceneDragging}
+        onTargetlessConnectionDrop={onTargetlessConnectionDrop}
         renderScene={renderScene}
         renderSceneHeader={renderSceneHeader}
         scene={scene}
@@ -122,6 +120,12 @@ class Container extends Component {
 
   render() {
     const { connectDropTarget, connections, scenes, viewport } = this.props;
+
+    const styles = {
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+    };
 
     return connectDropTarget(
         <div style={styles}>
