@@ -46,10 +46,26 @@ class Container extends Component {
 
   state = {
     draggedScene: {},
+    currentConnectionOrigin: null,
+    currentConnectionBox: null,
   };
 
-  toggleIsSceneDragging = (draggedScene, isStartingDrag) => {
-    const { onDragSceneEnd } = this.props;
+  handleDragConnectionStart = (scene, clickAbsolutePosition) => {
+    const { onDragConnectionStart } = this.props;
+    const clickRelativePosition = {
+      x: clickAbsolutePosition.x - scene.x,
+      y: clickAbsolutePosition.y - scene.y,
+    };
+
+    const currentConnectionBox = onDragConnectionStart(scene, clickRelativePosition);
+    this.setState({
+      currentConnectionOrigin: currentConnectionBox ? clickAbsolutePosition : null,
+    });
+  }
+
+  toggleIsSceneDragging = (draggedSceneId, isStartingDrag) => {
+    const { onDragSceneEnd, scenes } = this.props;
+    const draggedScene = scenes[draggedSceneId];
 
     if (!isStartingDrag) {
       const sceneDelta = {
@@ -73,7 +89,7 @@ class Container extends Component {
       return null;
     }
     return <Connection
-      key={key}
+      key={`${key}draggable`}
       startX={connection.startX}
       startY={connection.startY}
       endingScene={toScene}
@@ -88,12 +104,14 @@ class Container extends Component {
       renderSceneHeader,
     } = this.props;
 
+    const { currentConnectionOrigin } = this.state;
+
     return (
       <DraggableScene
+        connectionLocation={currentConnectionOrigin}
         key={key}
-        id={key}
         onDragConnectionEnd={onDragConnectionEnd}
-        onDragConnectionStart={onDragConnectionStart}
+        onDragConnectionStart={this.handleDragConnectionStart}
         onSceneDragChange={this.toggleIsSceneDragging}
         renderScene={renderScene}
         renderSceneHeader={renderSceneHeader}

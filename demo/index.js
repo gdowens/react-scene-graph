@@ -39,6 +39,7 @@ class Demo extends Component {
   }
 
   handleDragSceneEnd = (scene, delta) => {
+    console.log("delta", delta);
     const newConnections = _.mapValues(this.state.connections, (connection) => {
       if (connection.from === scene.id) {
         return {
