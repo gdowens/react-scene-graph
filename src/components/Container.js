@@ -133,15 +133,14 @@ class Container extends Component {
 
     return connectDropTarget(
         <div style={styles}>
-          {Object
-            .keys(scenes)
+          {Object.keys(scenes)
             .map(key => this.renderDraggableScene(scenes[key], key))
           }
-          <SVGComponent width={viewport.width} height={viewport.height}>
+          <div style={{width:'100%', height:'100%'}}>
             {Object.keys(connections)
               .map(key => this.renderConnection(connections[key], key))
             }
-          </SVGComponent>
+          </div>
         </div>
       );
   }

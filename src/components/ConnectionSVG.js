@@ -6,21 +6,30 @@ import SVGComponent from './SVGComponent';
 import Circle from './Circle';
 import GElement from './GElement';
 import Line from './Line';
+import _ from 'lodash';
+console.log(ItemTypes);
 
 const CIRCLE_RADIUS = "3";
 const STROKE_COLOR = "blue";
 const STROKE_WIDTH = "2";
 
-export default class ConnectionSVGBase extends Component {
+class ConnectionSVGBase extends Component {
 
     static propTypes = {
-        connectConnectionDragPreview: PropTypes.func.isRequired,
-        connectConnectionDragSource: PropTypes.func.isRequired,
+        startConnectionDragPreview: PropTypes.func.isRequired,
+        startConnectionDragSource: PropTypes.func.isRequired,
+        endConnectionDragPreview: PropTypes.func.isRequired,
+        endConnectionDragSource: PropTypes.func.isRequired,
         startX: PropTypes.number.isRequired,
         startY: PropTypes.number.isRequired,
         endX: PropTypes.number.isRequired,
         endY: PropTypes.number.isRequired,
     };
+
+    componentDidMount() {
+        this.props.startConnectionDragPreview(getEmptyImage());
+        this.props.endConnectionDragPreview(getEmptyImage());
+    }
 
     renderConnectionHandle = (x, y) => {
         return (
@@ -49,12 +58,16 @@ export default class ConnectionSVGBase extends Component {
     }
 
     render() {
-        const { startX, startY, endX, endY } = this.props;
+        const { startConnectionDragSource, endConnectionDragSource, startX, startY, endX, endY } = this.props;
         const lineOffset = parseInt(CIRCLE_RADIUS, 10);
 
         return (
             <SVGComponent>
-                { this.renderConnectionHandle(startX, startY) }
+                {startConnectionDragSource(
+                    <div>
+                        {this.renderConnectionHandle(startX, startY)}
+                    </div>
+                )}
                 <Line
                     x1={startX + lineOffset}
                     y1={startY}
@@ -63,8 +76,52 @@ export default class ConnectionSVGBase extends Component {
                     strokeWidth={STROKE_WIDTH}
                     stroke={STROKE_COLOR}
                 />
-                { this.renderConnectionHandle(endX, endY) }
+                {endConnectionDragSource(
+                    <div>
+                        {this.renderConnectionHandle(endX, endY)}
+                    </div>
+                )}
             </SVGComponent>
         );
     }
 }
+
+const startConnectionSource = {
+  beginDrag(props) {
+    console.log("dragging start");
+    return {...props};
+  },
+};
+
+const startConnectionCollect = (connect, monitor) => ({
+  startConnectionDragPreview: connect.dragPreview(),
+  startConnectionDragSource: connect.dragSource(),
+});
+
+const endConnectionSource = {
+  beginDrag(props) {
+    console.log("dragging start");
+    return {...props};
+  },
+};
+
+const endConnectionCollect = (connect, monitor) => ({
+  endConnectionDragPreview: connect.dragPreview(),
+  endConnectionDragSource: connect.dragSource(),
+});
+
+console.log(ItemTypes.CONNECTION_START);
+console.log(ItemTypes.CONNECTION_END);
+
+export default _.flow(
+    DragSource(
+        ItemTypes.CONNECTION_START,
+        startConnectionSource,
+        startConnectionCollect
+    ),
+    DragSource(
+        ItemTypes.CONNECTION_END,
+        endConnectionSource,
+        endConnectionCollect
+    )
+)(ConnectionSVGBase);

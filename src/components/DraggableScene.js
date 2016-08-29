@@ -80,4 +80,4 @@ const dropConnectionCollect = (connect) => ({
   connectDropTarget: connect.dropTarget(),
 });
 
-export default DropTarget(ItemTypes.CONNECTION, connectionTarget, dropConnectionCollect)(DraggableScene)
+export default DropTarget(ItemTypes.NEW_CONNECTION, connectionTarget, dropConnectionCollect)(DraggableScene)

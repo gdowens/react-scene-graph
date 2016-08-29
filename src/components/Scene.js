@@ -48,7 +48,7 @@ const dragConnectionCollect = (connect, monitor) => ({
 });
 
 export default DragSource(
-  ItemTypes.CONNECTION,
+  ItemTypes.NEW_CONNECTION,
   connectionSource,
   dragConnectionCollect
 )(SceneBase);

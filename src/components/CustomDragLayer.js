@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { DragLayer } from 'react-dnd';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
-import ConnectionSVG from './ConnectionSVG';
+import ConnectionSVG from './CustomDragLayer/ConnectionSVG';
 import SVGComponent from './SVGComponent';
 import getConnectionLocation from '../utils/getConnectionLocation';
 
@@ -100,7 +100,6 @@ class CustomDragLayer extends Component {
       connection.startY :
       connection.startY + yDelta;
     const endLocation = getConnectionLocation(toScene);
-    console.log(connection.id);
     return <ConnectionSVG
       key={connection.id}
       startX={startX}
@@ -144,7 +143,7 @@ class CustomDragLayer extends Component {
       return null;
     }
 
-    if(itemType === ItemTypes.CONNECTION) {
+    if(itemType === ItemTypes.NEW_CONNECTION) {
       return this.renderConnectionBeingDragged();
     }
 
