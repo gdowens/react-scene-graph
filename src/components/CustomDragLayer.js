@@ -5,7 +5,7 @@ import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
 import ConnectionSVG from './CustomDragLayer/ConnectionSVG';
 import SVGComponent from './SVGComponent';
-import getConnectionLocation from '../utils/getConnectionLocation';
+import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
 
 const layerStyles = {
   position: 'fixed',
@@ -99,7 +99,7 @@ class CustomDragLayer extends Component {
     const startY = itemIsTarget ?
       connection.startY :
       connection.startY + yDelta;
-    const endLocation = getConnectionLocation(toScene);
+    const endLocation = getEndingConnectionLocation(toScene);
     return <ConnectionSVG
       key={connection.id}
       startX={startX}
@@ -130,7 +130,7 @@ class CustomDragLayer extends Component {
     const { currentOffset, item, scenes, viewport } = this.props;
     const endScene = scenes[item.to];
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
-    const endingLoc = isStart ? getConnectionLocation(endScene) : currentOffset;
+    const endingLoc = isStart ? getEndingConnectionLocation(endScene) : currentOffset;
 
     return (
       <div style={layerStyles}>

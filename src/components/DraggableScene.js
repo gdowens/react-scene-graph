@@ -4,6 +4,7 @@ import { DropTarget } from 'react-dnd';
 import _ from 'lodash';
 import Scene from './Scene';
 import SceneHeader from './SceneHeader';
+import getStartingConnectionLocation from '../utils/getStartingConnectionLocation';
 
 class DraggableScene extends Component {
   static propTypes = {
@@ -89,10 +90,8 @@ const connectionTarget = {
       onDragConnectionEnd(connection, connectionLocation, scene);
     } else if (itemType === ItemTypes.CONNECTION_START) {
       const clientOffset = monitor.getClientOffset();
-      updateConnectionStart(connection.id, {
-        x: scene.x + scene.width + 6,
-        y: clientOffset.y,
-      }, scene.id);
+      const startingConnectionLocation = getStartingConnectionLocation(scene, clientOffset);
+      updateConnectionStart(connection.id, startingConnectionLocation, scene.id);
     } else if (itemType === ItemTypes.CONNECTION_END) {
       updateConnectionEnd(connection.id, scene.id);
     }

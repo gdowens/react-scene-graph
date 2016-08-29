@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import ItemTypes from '../constants/ItemTypes';
-import getConnectionLocation from '../utils/getConnectionLocation';
+import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
 import PureLine from './PureLine';
 const CIRCLE_RADIUS = 3;
 const START_STROKE_COLOR = "blue";
@@ -65,7 +65,7 @@ class ConnectionBase extends Component {
 
   render() {
     const { startConnectionDragSource, endConnectionDragSource, connection, endingScene } = this.props;
-    const endLocation = getConnectionLocation(endingScene);
+    const endLocation = getEndingConnectionLocation(endingScene);
 
     const { startX, startY } = connection;
     const { x: endX, y: endY } = endLocation;
@@ -78,11 +78,11 @@ class ConnectionBase extends Component {
         <PureLine
           from={{
             x: startX + CIRCLE_RADIUS,
-            y: startY,
+            y: startY - 8,
           }}
           to={{
             x: endX - CIRCLE_RADIUS,
-            y: endY,
+            y: endY - 8,
           }}
           borderBottom={`${STROKE_WIDTH}px solid ${START_STROKE_COLOR}`}
         />
