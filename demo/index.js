@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import update from 'react/lib/update';
 import _ from 'lodash';
 import Noodlegraph from '../src';
 import Scene from './components/Scene';
 import SceneHeader from './components/SceneHeader';
 
-let counter = 0;
-
-class Demo extends Component {
+export default class Demo extends Component {
   state = {
     scenes: {
       '1': {id: '1', name: 'Scene1', y: 50, x: 50, width: 100, height: 200},
@@ -69,5 +66,3 @@ class Demo extends Component {
   }
 
 }
-
-export default connect()(Demo)

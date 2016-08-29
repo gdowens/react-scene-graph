@@ -9,33 +9,22 @@
  */
 
 import 'babel-polyfill'
-import 'whatwg-fetch'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
 import Demo from './demo'
-import configureStore from './demo/configureStore'
 
 const container = document.getElementById('container')
-const initialState = {}
-const store = configureStore(initialState)
 
 const renderComponent = (component) => {
 
   ReactDOM.render(
-    <Provider store={store}>
-      <Demo/>
-    </Provider>
+    <Demo/>
     , container)
 }
 
 if (module.hot) {
   module.hot.accept()
-  module.hot.accept('./demo/reducers', () => {
-    const nextRootReducer = require('./demo/reducers/index');
-    store.replaceReducer(nextRootReducer);
-  })
 }
 
 renderComponent(Demo)
