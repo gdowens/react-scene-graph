@@ -35,44 +35,6 @@ class Demo extends Component {
     };
   }
 
-  handleDragSceneStart = (data) => {
-  }
-
-  handleDragSceneEnd = (scene, delta) => {
-    const newConnections = _.mapValues(this.state.connections, (connection) => {
-      if (connection.from === scene.id) {
-        return {
-          ...connection,
-          startX: connection.startX + delta.x,
-          startY: connection.startY + delta.y,
-        };
-      } else {
-        return connection;
-      }
-    });
-
-    this.setState({connections: newConnections});
-  }
-
-  handleDragConnectionEnd = (sourceScene, sourceInitialOffset, targetScene) => {
-    let newConnections = {
-      ...this.state.connections
-    };
-    const connectionId = `${sourceScene.id}${targetScene.id}${counter}`;
-    newConnections[connectionId] = {
-      from: sourceScene.id,
-      id: connectionId,
-      label: 'onPress',
-      startX: sourceInitialOffset.x,
-      startY: sourceInitialOffset.y,
-      to: targetScene.id,
-    };
-    this.setState({
-      connections: newConnections,
-    });
-    counter++;
-  }
-
   renderScene = (scene) => {
     return (
       <div key={scene.id}>

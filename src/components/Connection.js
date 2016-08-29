@@ -32,9 +32,15 @@ class ConnectionBase extends Component {
 
   static propTypes = {
     connection: PropTypes.object.isRequired,
+    endConnectionDragPreview: PropTypes.func.isRequired,
+    endConnectionDragSource: PropTypes.func.isRequired,
     endingScene: PropTypes.object.isRequired,
+    isEndConnectionDragging: PropTypes.bool.isRequired,
+    isStartConnectionDragging: PropTypes.bool.isRequired,
     onConnectionDragChange: PropTypes.func.isRequired,
     onTargetlessConnectionDrop: PropTypes.func.isRequired,
+    startConnectionDragPreview: PropTypes.func.isRequired,
+    startConnectionDragSource: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -43,12 +49,17 @@ class ConnectionBase extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isStartConnectionDragging, isEndConnectionDragging, onConnectionDragChange, connection } = this.props;
+    const {
+      isEndConnectionDragging,
+      isStartConnectionDragging,
+      onConnectionDragChange,
+      connection,
+    } = this.props;
 
-    if (isStartConnectionDragging !== nextProps.isStartConnectionDragging) {
-      onConnectionDragChange(connection, nextProps.isStartConnectionDragging);
-    } else if (isEndConnectionDragging !== nextProps.isEndConnectionDragging) {
-      onConnectionDragChange(connection, nextProps.isEndConnectionDragging);
+    if (!isStartConnectionDragging && nextProps.isStartConnectionDragging) {
+      onConnectionDragChange(connection, true);
+    } else if (!isEndConnectionDragging && nextProps.isEndConnectionDragging) {
+      onConnectionDragChange(connection, true);
     }
   }
 

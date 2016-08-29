@@ -40,10 +40,10 @@ const sceneSource = {
   beginDrag(props) {
     return {...props.scene};
   },
-  endDrag(props) {
+  endDrag(props, monitor) {
     const { onSceneDragChange, scene } = props;
-
-    onSceneDragChange(scene.id, false);
+    const delta = monitor.getDifferenceFromInitialOffset();
+    onSceneDragChange(scene.id, false, delta);
   },
 };
 

@@ -5,20 +5,6 @@ import update from 'react/lib/update';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
 import DraggableScene from './DraggableScene';
-import Line from './Line';
-import SVGComponent from './SVGComponent';
-
-const sceneTarget = {
-  drop(props, monitor, component) {
-    const delta = monitor.getDifferenceFromInitialOffset();
-    const item = monitor.getItem();
-
-    let x = Math.round(item.x + delta.x);
-    let y = Math.round(item.y + delta.y);
-
-    props.updateScene(item.id, { x, y })
-  }
-};
 
 class Container extends Component {
   static propTypes = {
@@ -72,16 +58,12 @@ class Container extends Component {
     });
   }
 
-  handleSceneDragChange = (draggedSceneId, isStartingDrag) => {
+  handleSceneDragChange = (draggedSceneId, isStartingDrag, delta) => {
     const { onDragSceneEnd, scenes } = this.props;
     const draggedScene = scenes[draggedSceneId];
 
-    if (!isStartingDrag) {
-      const sceneDelta = {
-        x: draggedScene.x - this.state.draggedScene.x,
-        y: draggedScene.y - this.state.draggedScene.y,
-      };
-      onDragSceneEnd(draggedScene, sceneDelta);
+    if (!isStartingDrag && delta) {
+      onDragSceneEnd(draggedScene, delta);
     }
 
     this.setState({
@@ -154,6 +136,6 @@ class Container extends Component {
   }
 }
 
-export default DropTarget(ItemTypes.SCENE, sceneTarget, connect => ({
+export default DropTarget(ItemTypes.SCENE, {}, connect => ({
   connectDropTarget: connect.dropTarget()
 }))(Container)
