@@ -1,6 +1,24 @@
 {
   "name": "noodlegraph",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "An npm package for building dynamic graphs in ReactJS",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabergg/noodlegraph.js.git"
+  },
+  "keywords": [
+    "graph",
+    "react",
+    "network",
+    "node"
+  ],
+  "author": "Gabe G'Sell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabergg/noodlegraph.js/issues"
+  },
+  "homepage": "https://github.com/gabergg/noodlegraph.js#readme",
   "engines": {
     "node": ">=5",
     "npm": ">=3.8"
