@@ -107,9 +107,6 @@ const endConnectionCollect = (connect, monitor) => ({
   endConnectionDragSource: connect.dragSource(),
 });
 
-console.log(ItemTypes.CONNECTION_START);
-console.log(ItemTypes.CONNECTION_END);
-
 export default _.flow(
     DragSource(
         ItemTypes.CONNECTION_START,

@@ -5,7 +5,8 @@ import ItemTypes from '../constants/ItemTypes';
 import getConnectionLocation from '../utils/getConnectionLocation';
 import PureLine from './PureLine';
 const CIRCLE_RADIUS = 3;
-const STROKE_COLOR = "blue";
+const START_STROKE_COLOR = "blue";
+const END_STROKE_COLOR = "red";
 const STROKE_WIDTH = 2;
 
 const fullSizedStyle = {
@@ -13,12 +14,13 @@ const fullSizedStyle = {
   width: '100%',
 };
 
-function getCircleStyle (x, y) {
+function getCircleStyle (x, y, end) {
+  const strokeColor = end ? END_STROKE_COLOR : START_STROKE_COLOR;
   return {
     height: '5px',
     width: '5px',
     borderRadius: '50%',
-    border: `${STROKE_WIDTH}px solid ${STROKE_COLOR}`,
+    border: `${STROKE_WIDTH}px solid ${strokeColor}`,
     position: 'fixed',
     left: x - 4,
     top: y - 4,
@@ -60,7 +62,7 @@ class ConnectionBase extends Component {
     return (
       <div>
         {startConnectionDragSource(
-          <div style={getCircleStyle(startX, startY)}/>
+          <div style={getCircleStyle(startX, startY, false)}/>
         )}
         <PureLine
           from={{
@@ -71,10 +73,10 @@ class ConnectionBase extends Component {
             x: endX - CIRCLE_RADIUS,
             y: endY,
           }}
-          borderBottom={`${STROKE_WIDTH}px solid ${STROKE_COLOR}`}
+          borderBottom={`${STROKE_WIDTH}px solid ${START_STROKE_COLOR}`}
         />
         {endConnectionDragSource(
-          <div style={getCircleStyle(endX, endY)}/>
+          <div style={getCircleStyle(endX, endY, true)}/>
         )}
       </div>
     );

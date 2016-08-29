@@ -171,8 +171,6 @@ class CustomDragLayer extends Component {
       return this.renderExistingConnectionBeingDragged(false);
     }
 
-    console.log("we getting here", itemType);
-
     const connectionsInMotion = _.filter(connections, (connection) => {
       return [connection.from, connection.to].includes(item.id);
     });

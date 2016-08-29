@@ -49,7 +49,6 @@ class Container extends Component {
   };
 
   handleConnectionDragChange = (draggedConnection, isStartingDrag) => {
-    console.log(draggedConnection.id, isStartingDrag);
     this.setState({
       draggedConnection: isStartingDrag ? draggedConnection : {},
     });
