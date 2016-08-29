@@ -1,41 +1,54 @@
 import React, { Component, PropTypes } from 'react';
-import SVGComponent from './SVGComponent';
-import Line from './Line';
-import TextPath from './TextPath';
+import { DragSource } from 'react-dnd';
+import ItemTypes from '../constants/ItemTypes';
+import ConnectionSVG from './ConnectionSVG';
+import getConnectionLocation from '../utils/getConnectionLocation';
 
-export default class Connection extends Component {
+class ConnectionBase extends Component {
 
     static propTypes = {
-        startX: PropTypes.number.isRequired,
-        startY: PropTypes.number.isRequired,
-        endX: PropTypes.number,
-        endY: PropTypes.number,
-        endingScene: PropTypes.object,
+        connectConnectionDragSource: PropTypes.func.isRequired,
+        connection: PropTypes.object.isRequired,
+        endingScene: PropTypes.object.isRequired,
     };
 
     render() {
-        const { startX, startY, endX, endY, endingScene } = this.props;
-
-        const x2 = endX ? endX : endingScene.x + endingScene.width / 2;
-        const y2 = endY ? endY : endingScene.y + endingScene.height / 2;
-        const lineId = `${startX}${x2}`;
+        const { connectConnectionDragSource, connection, endingScene } = this.props;
+        const endLocation = getConnectionLocation(endingScene);
 
         return (
-            <SVGComponent>
-                <Line
-                    id={lineId}
-                    x1={startX}
-                    y1={startY}
-                    x2={x2}
-                    y2={y2}
-                    strokeWidth="3"
-                    stroke="blue"
-                />
-                <TextPath
-                    href={lineId}
-                    text={"Hehe"}
-                />
-            </SVGComponent>
+            <ConnectionSVG
+                startX={connection.startX}
+                startY={connection.startY}
+                endX={endLocation.x}
+                endY={endLocation.y}
+            />
         );
     }
 }
+// you're hooking up connection as a drag source so
+// you can modify and delete existing connections
+
+const connectionSource = {
+  beginDrag(props) {
+    console.log("we dragging", props.connection.id);
+    return {...props.connection};
+  },
+  endDrag(props, monitor, component) {
+    console.log("WTF");
+    if (!monitor.didDrop()) {
+      props.onTargetlessConnectionDrop(monitor.getItem().id);
+    }
+  },
+};
+
+const dragConnectionCollect = (connect, monitor) => ({
+  connectConnectionDragPreview: connect.dragPreview(),
+  connectConnectionDragSource: connect.dragSource(),
+});
+
+export default DragSource(
+  ItemTypes.CONNECTION,
+  connectionSource,
+  dragConnectionCollect
+)(ConnectionBase);

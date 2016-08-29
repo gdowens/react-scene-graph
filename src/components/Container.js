@@ -52,9 +52,14 @@ class Container extends Component {
       y: clickAbsolutePosition.y - scene.y,
     };
 
+    const connectionOrigin = {
+      x: scene.x + scene.width + 6,
+      y: clickAbsolutePosition.y,
+    };
+
     const currentConnectionBox = onDragConnectionStart(scene, clickRelativePosition);
     this.setState({
-      currentConnectionOrigin: currentConnectionBox ? clickAbsolutePosition : null,
+      currentConnectionOrigin: currentConnectionBox ? connectionOrigin : null,
     });
   }
 
@@ -85,8 +90,7 @@ class Container extends Component {
     }
     return <Connection
       key={`${key}draggable`}
-      startX={connection.startX}
-      startY={connection.startY}
+      connection={connection}
       endingScene={toScene}
     />
   }

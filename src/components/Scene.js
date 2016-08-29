@@ -36,9 +36,6 @@ const connectionSource = {
     return props.canDrag;
   },
   endDrag(props, monitor, component) {
-    console.log("monitor", monitor.didDrop());
-    console.log(monitor.getItem());
-    console.log(monitor.getItemType());
     if (!monitor.didDrop()) {
       props.onTargetlessConnectionDrop(monitor.getItem().id);
     }

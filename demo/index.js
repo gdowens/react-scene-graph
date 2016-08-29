@@ -58,12 +58,14 @@ class Demo extends Component {
     let newConnections = {
       ...this.state.connections
     };
-    newConnections[`${sourceScene.id}${targetScene.id}${counter}`] = {
+    const connectionId = `${sourceScene.id}${targetScene.id}${counter}`;
+    newConnections[connectionId] = {
+      from: sourceScene.id,
+      id: connectionId,
+      label: 'onPress',
       startX: sourceInitialOffset.x,
       startY: sourceInitialOffset.y,
-      from: sourceScene.id,
       to: targetScene.id,
-      label: 'onPress',
     };
     this.setState({
       connections: newConnections,

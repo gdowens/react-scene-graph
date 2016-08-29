@@ -3,7 +3,9 @@ import _ from 'lodash';
 import { DragLayer } from 'react-dnd';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
+import ConnectionSVG from './ConnectionSVG';
 import SVGComponent from './SVGComponent';
+import getConnectionLocation from '../utils/getConnectionLocation';
 
 const layerStyles = {
   position: 'fixed',
@@ -83,7 +85,7 @@ class CustomDragLayer extends Component {
     scenes: {},
   };
 
-  renderConnection(connection, key) {
+  renderConnection(connection) {
     const { currentSourceOffset, initialSourceOffset, item } = this.props;
 
     const fromScene = getModifiedScene(this.props, connection.from);
@@ -97,11 +99,14 @@ class CustomDragLayer extends Component {
     const startY = itemIsTarget ?
       connection.startY :
       connection.startY + yDelta;
-    return <Connection
-      key={key}
+    const endLocation = getConnectionLocation(toScene);
+    console.log(connection.id);
+    return <ConnectionSVG
+      key={connection.id}
       startX={startX}
       startY={startY}
-      endingScene={toScene}
+      endX={endLocation.x}
+      endY={endLocation.y}
     />
   }
 
@@ -111,7 +116,7 @@ class CustomDragLayer extends Component {
     return (
       <div style={layerStyles}>
         <SVGComponent width={viewport.width} height={viewport.height}>
-          <Connection
+          <ConnectionSVG
             startX={initialOffset.x}
             startY={initialOffset.y}
             endX={currentOffset.x}
@@ -156,7 +161,7 @@ class CustomDragLayer extends Component {
         </div>
         <SVGComponent width={viewport.width} height={viewport.height}>
           {Object.keys(connectionsInMotion)
-            .map(key => this.renderConnection(connectionsInMotion[key], key))
+            .map(key => this.renderConnection(connectionsInMotion[key]))
           }
         </SVGComponent>
       </div>
