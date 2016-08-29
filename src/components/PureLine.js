@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import _ from 'lodash';
 
 export default class PureLine extends Component {
 
@@ -15,12 +16,8 @@ export default class PureLine extends Component {
   };
 
   render() {
-    let from = this.props.from;
-    let to = this.props.to;
-    if (to.x < from.x) {
-      from = this.props.to;
-      to = this.props.from;
-    }
+    const from = _.minBy([this.props.from, this.props.to], 'x');
+    const to = _.maxBy([this.props.from, this.props.to], 'x');
 
     const len = Math.sqrt(Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2));
     const angle = Math.atan((to.y - from.y) / (to.x - from.x));

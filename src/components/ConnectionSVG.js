@@ -7,7 +7,6 @@ import Circle from './Circle';
 import GElement from './GElement';
 import Line from './Line';
 import _ from 'lodash';
-console.log(ItemTypes);
 
 const CIRCLE_RADIUS = "3";
 const STROKE_COLOR = "blue";
@@ -88,7 +87,6 @@ class ConnectionSVGBase extends Component {
 
 const startConnectionSource = {
   beginDrag(props) {
-    console.log("dragging start");
     return {...props};
   },
 };
@@ -100,7 +98,6 @@ const startConnectionCollect = (connect, monitor) => ({
 
 const endConnectionSource = {
   beginDrag(props) {
-    console.log("dragging start");
     return {...props};
   },
 };

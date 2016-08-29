@@ -26,6 +26,28 @@ class Noodlegraph extends Component {
     }
   }
 
+  handleUpdateConnectionStart = (id, newLocation, newStartSceneId) => {
+    this.props.onChange(update(this.props.data, {
+      connections: {
+        [id]: {
+          from: { $set: newStartSceneId },
+          startX: { $set: newLocation.x },
+          startY: { $set: newLocation.y },
+        },
+      }
+    }));
+  }
+
+  handleUpdateConnectionEnd = (id, newEndSceneId) => {
+    this.props.onChange(update(this.props.data, {
+      connections: {
+        [id]: {
+          to: { $set: newEndSceneId },
+        },
+      }
+    }));
+  }
+
   handleUpdateScene = (id, pos) => {
     this.props.onChange(update(this.props.data, {
       scenes: {
@@ -39,8 +61,6 @@ class Noodlegraph extends Component {
 
   handleRemoveConnection = (id) => {
     const { connections } = this.props.data;
-
-    console.log("removing", id);
 
     this.props.onChange(update(this.props.data, {
       connections: {
@@ -71,6 +91,8 @@ class Noodlegraph extends Component {
           renderScene={renderScene}
           renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}
+          updateConnectionStart={this.handleUpdateConnectionStart}
+          updateConnectionEnd={this.handleUpdateConnectionEnd}
           updateScene={this.handleUpdateScene}
           viewport={data.viewport}
         />

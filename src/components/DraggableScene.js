@@ -11,6 +11,8 @@ class DraggableScene extends Component {
     draggedScene: PropTypes.object.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
     onDragConnectionEnd: PropTypes.func.isRequired,
+    updateConnectionStart: PropTypes.func.isRequired,
+    updateConnectionEnd: PropTypes.func.isRequired,
     onSceneDragChange: PropTypes.func.isRequired,
     onTargetlessConnectionDrop: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
@@ -72,7 +74,28 @@ class DraggableScene extends Component {
 
 const connectionTarget = {
   drop(props, monitor) {
-    props.onDragConnectionEnd(monitor.getItem(), props.connectionLocation, props.scene);
+    const {
+      connectionLocation,
+      onDragConnectionStart,
+      onDragConnectionEnd,
+      updateConnectionStart,
+      updateConnectionEnd,
+      scene,
+    } = props;
+    const connection = monitor.getItem();
+    const itemType = monitor.getItemType();
+
+    if (itemType === ItemTypes.NEW_CONNECTION) {
+      onDragConnectionEnd(connection, connectionLocation, scene);
+    } else if (itemType === ItemTypes.CONNECTION_START) {
+      const clientOffset = monitor.getClientOffset();
+      updateConnectionStart(connection.id, {
+        x: scene.x + scene.width + 6,
+        y: clientOffset.y,
+      }, scene.id);
+    } else if (itemType === ItemTypes.CONNECTION_END) {
+      updateConnectionEnd(connection.id, scene.id);
+    }
   }
 }
 
@@ -80,4 +103,6 @@ const dropConnectionCollect = (connect) => ({
   connectDropTarget: connect.dropTarget(),
 });
 
-export default DropTarget(ItemTypes.NEW_CONNECTION, connectionTarget, dropConnectionCollect)(DraggableScene)
+const accepts = [ItemTypes.NEW_CONNECTION, ItemTypes.CONNECTION_START, ItemTypes.CONNECTION_END];
+
+export default DropTarget(accepts, connectionTarget, dropConnectionCollect)(DraggableScene)

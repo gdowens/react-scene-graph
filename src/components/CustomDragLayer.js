@@ -126,6 +126,26 @@ class CustomDragLayer extends Component {
     );
   }
 
+  renderExistingConnectionBeingDragged = (isStart) => {
+    const { currentOffset, item, scenes, viewport } = this.props;
+    const endScene = scenes[item.to];
+    const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
+    const endingLoc = isStart ? getConnectionLocation(endScene) : currentOffset;
+
+    return (
+      <div style={layerStyles}>
+        <SVGComponent width={viewport.width} height={viewport.height}>
+          <ConnectionSVG
+            startX={startingLoc.x}
+            startY={startingLoc.y}
+            endX={endingLoc.x}
+            endY={endingLoc.y}
+          />
+        </SVGComponent>
+      </div>
+    );
+  }
+
   render() {
     const {
       connections,
@@ -145,7 +165,13 @@ class CustomDragLayer extends Component {
 
     if(itemType === ItemTypes.NEW_CONNECTION) {
       return this.renderConnectionBeingDragged();
+    } else if (itemType === ItemTypes.CONNECTION_START) {
+      return this.renderExistingConnectionBeingDragged(true);
+    } else if (itemType === ItemTypes.CONNECTION_END) {
+      return this.renderExistingConnectionBeingDragged(false);
     }
+
+    console.log("we getting here", itemType);
 
     const connectionsInMotion = _.filter(connections, (connection) => {
       return [connection.from, connection.to].includes(item.id);

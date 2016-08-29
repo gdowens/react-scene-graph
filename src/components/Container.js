@@ -32,6 +32,8 @@ class Container extends Component {
     renderSceneHeader: PropTypes.func.isRequired,
     scenes: PropTypes.object,
     updateScene: PropTypes.func.isRequired,
+    updateConnectionEnd: PropTypes.func.isRequired,
+    updateConnectionStart: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -40,10 +42,18 @@ class Container extends Component {
   };
 
   state = {
+    draggedConnection: {},
     draggedScene: {},
     currentConnectionOrigin: null,
     currentConnectionBox: null,
   };
+
+  handleConnectionDragChange = (draggedConnection, isStartingDrag) => {
+    console.log(draggedConnection.id, isStartingDrag);
+    this.setState({
+      draggedConnection: isStartingDrag ? draggedConnection : {},
+    });
+  }
 
   handleDragConnectionStart = (scene, clickAbsolutePosition) => {
     const { onDragConnectionStart } = this.props;
@@ -63,7 +73,7 @@ class Container extends Component {
     });
   }
 
-  toggleIsSceneDragging = (draggedSceneId, isStartingDrag) => {
+  handleSceneDragChange = (draggedSceneId, isStartingDrag) => {
     const { onDragSceneEnd, scenes } = this.props;
     const draggedScene = scenes[draggedSceneId];
 
@@ -81,17 +91,20 @@ class Container extends Component {
   }
 
   renderConnection(connection, key) {
-    const { scenes } = this.props;
-    const { draggedScene } = this.state;
+    const { onTargetedConnectionDrop, onTargetlessConnectionDrop, scenes } = this.props;
+    const { draggedConnection, draggedScene } = this.state;
     const fromScene = scenes[connection.from];
     const toScene = scenes[connection.to];
-    if ([fromScene.id, toScene.id].includes(draggedScene.id)) {
+    if ([fromScene.id, toScene.id].includes(draggedScene.id) ||
+        connection.id === draggedConnection.id) {
       return null;
     }
     return <Connection
-      key={`${key}draggable`}
       connection={connection}
       endingScene={toScene}
+      key={`${key}draggable`}
+      onConnectionDragChange={this.handleConnectionDragChange}
+      onTargetlessConnectionDrop={onTargetlessConnectionDrop}
     />
   }
 
@@ -102,6 +115,8 @@ class Container extends Component {
       onTargetlessConnectionDrop,
       renderScene,
       renderSceneHeader,
+      updateConnectionEnd,
+      updateConnectionStart,
     } = this.props;
 
     const { draggedScene, currentConnectionOrigin } = this.state;
@@ -113,11 +128,13 @@ class Container extends Component {
         key={key}
         onDragConnectionEnd={onDragConnectionEnd}
         onDragConnectionStart={this.handleDragConnectionStart}
-        onSceneDragChange={this.toggleIsSceneDragging}
+        onSceneDragChange={this.handleSceneDragChange}
         onTargetlessConnectionDrop={onTargetlessConnectionDrop}
         renderScene={renderScene}
         renderSceneHeader={renderSceneHeader}
         scene={scene}
+        updateConnectionEnd={updateConnectionEnd}
+        updateConnectionStart={updateConnectionStart}
       />
     );
   }
@@ -125,22 +142,14 @@ class Container extends Component {
   render() {
     const { connectDropTarget, connections, scenes, viewport } = this.props;
 
-    const styles = {
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-    };
-
     return connectDropTarget(
-        <div style={styles}>
+        <div>
           {Object.keys(scenes)
             .map(key => this.renderDraggableScene(scenes[key], key))
           }
-          <div style={{width:'100%', height:'100%'}}>
-            {Object.keys(connections)
-              .map(key => this.renderConnection(connections[key], key))
-            }
-          </div>
+          {Object.keys(connections)
+            .map(key => this.renderConnection(connections[key], key))
+          }
         </div>
       );
   }
