@@ -49,19 +49,6 @@ tasks.set('html', () => {
 });
 
 //
-// Generate sitemap.xml
-// -----------------------------------------------------------------------------
-tasks.set('sitemap', () => {
-  const urls = require('./routes.json')
-    .filter(x => !x.path.includes(':'))
-    .map(x => ({ loc: x.path }));
-  const template = fs.readFileSync('./public/sitemap.ejs', 'utf8');
-  const render = ejs.compile(template, { filename: './public/sitemap.ejs' });
-  const output = render({ config, urls });
-  fs.writeFileSync('public/sitemap.xml', output, 'utf8');
-});
-
-//
 // Bundle JavaScript, CSS and image files with Webpack
 // -----------------------------------------------------------------------------
 tasks.set('bundle', () => {
@@ -69,6 +56,7 @@ tasks.set('bundle', () => {
   return new Promise((resolve, reject) => {
     webpack(webpackConfig).run((err, stats) => {
       if (err) {
+        console.log("got it here");
         reject(err);
       } else {
         console.log(stats.toString(webpackConfig.stats));
@@ -87,7 +75,6 @@ tasks.set('build', () => {
     .then(() => run('clean'))
     .then(() => run('bundle'))
     .then(() => run('html'))
-    .then(() => run('sitemap'));
 });
 
 //

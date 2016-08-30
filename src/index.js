@@ -1,3 +1,5 @@
-import Noodlegraph from './components/Noodlegraph'
+import 'babel-polyfill';
 
-export default Noodlegraph
+import Noodlegraph from './components/Noodlegraph';
+
+export default Noodlegraph;

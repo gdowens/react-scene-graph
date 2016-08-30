@@ -19,7 +19,7 @@ const isDebug = global.DEBUG === false ? false : !process.argv.includes('--relea
 const isVerbose = process.argv.includes('--verbose') || process.argv.includes('-v');
 const useHMR = !!global.HMR; // Hot Module Replacement (HMR)
 const babelConfig = Object.assign({}, pkg.babel, {
-  babelrc: false,
+  babelrc: true,
   cacheDirectory: useHMR,
 });
 
@@ -85,13 +85,13 @@ const config = {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
-        include: [
-          path.resolve(__dirname, './src'),
-          path.resolve(__dirname, './demo'),
-          path.resolve(__dirname, './main.js'),
-        ],
-        loader: `babel-loader?${JSON.stringify(babelConfig)}`,
+        test: /\.js$/,
+        loader: 'babel',
+        exclude: /node_modules/,
+        query: {
+          cacheDirectory: false,
+          presets: ['es2015', 'react', 'stage-0']
+        }
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
