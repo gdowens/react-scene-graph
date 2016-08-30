@@ -1,11 +1,11 @@
 {
-  "name": "noodlegraph",
+  "name": "react-scene-graph",
   "version": "0.0.1",
   "description": "An npm package for building dynamic graphs in ReactJS",
-  "main": "lib/main.js",
+  "main": "public/dist/main.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gabergg/noodlegraph.git"
+    "url": "git+https://github.com/gabergg/react-scene-graph.git"
   },
   "keywords": [
     "graph",
@@ -17,9 +17,9 @@
   "author": "Gabe G'Sell",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gabergg/noodlegraph/issues"
+    "url": "https://github.com/gabergg/react-scene-graph/issues"
   },
-  "homepage": "https://github.com/gabergg/noodlegraph#readme",
+  "homepage": "https://github.com/gabergg/react-scene-graph#readme",
   "engines": {
     "node": ">=5",
     "npm": ">=3.8"
