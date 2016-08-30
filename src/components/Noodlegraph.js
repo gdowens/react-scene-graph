@@ -126,6 +126,7 @@ class Noodlegraph extends Component {
       <div style={containerStyle}>
         <Container
           connections={data.connections}
+          onDragConnectionEnd={this.handleDragConnectionEnd}
           onDragConnectionStart={onDragConnectionStart}
           onDragSceneEnd={this.handleDragSceneEnd}
           onTargetlessConnectionDrop={this.handleRemoveConnection}

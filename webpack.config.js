@@ -23,6 +23,12 @@ const babelConfig = Object.assign({}, pkg.babel, {
   cacheDirectory: useHMR,
 });
 
+const babelInclude = isDebug ? [
+  path.resolve(__dirname, './main.js'),
+  path.resolve(__dirname, './demo'),
+  path.resolve(__dirname, './src')
+] : [ path.resolve(__dirname, './src') ];
+
 // Webpack configuration (main.js => public/dist/main.{hash}.js)
 // http://webpack.github.io/docs/configuration.html
 const config = {
@@ -87,7 +93,7 @@ const config = {
       {
         test: /\.js$/,
         loader: 'babel',
-        exclude: /node_modules/,
+        include: babelInclude,
         query: {
           cacheDirectory: false,
           presets: ['es2015', 'react', 'stage-0']
