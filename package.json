@@ -2,7 +2,7 @@
   "name": "noodlegraph",
   "version": "0.0.1",
   "description": "An npm package for building dynamic graphs in ReactJS",
-  "main": "public/dist/main.af16f6f3b77b793b8a8d.js",
+  "main": "lib/main.af16f6f3b77b793b8a8d.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gabergg/noodlegraph.git"
