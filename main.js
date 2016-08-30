@@ -7,10 +7,7 @@ import Demo from './demo'
 const container = document.getElementById('container')
 
 const renderComponent = (component) => {
-
-  ReactDOM.render(
-    <Demo/>
-    , container)
+  ReactDOM.render(<Demo/>, container);
 }
 
 if (module.hot) {
