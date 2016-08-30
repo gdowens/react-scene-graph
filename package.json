@@ -1,6 +1,6 @@
 {
   "name": "react-scene-graph",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An npm package for building dynamic graphs in ReactJS",
   "main": "public/dist/main.js",
   "repository": {
@@ -72,8 +72,6 @@
     "clean": "node run clean",
     "build": "node run build",
     "build:debug": "node run build --debug",
-    "publish": "node run publish",
-    "publish:debug": "node run publish --debug",
     "start": "node run"
   }
 }
