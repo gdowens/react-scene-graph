@@ -48,6 +48,8 @@ const config = {
     filename: isDebug ? '[name].js?[hash]' : '[name].[hash].js',
     chunkFilename: isDebug ? '[id].js?[chunkhash]' : '[id].[chunkhash].js',
     sourcePrefix: '  ',
+    libraryTarget: 'umd',
+    library: ['Noodlegraph']
   },
 
   // Switch loaders to debug or release mode
