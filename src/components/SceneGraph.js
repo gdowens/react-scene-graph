@@ -7,7 +7,7 @@ import CustomDragLayer from './CustomDragLayer'
 import Container from './Container'
 import getUUID from '../utils/getUUID';
 
-class Noodlegraph extends Component {
+class SceneGraph extends Component {
   static propTypes = {
     containerStyle: PropTypes.object,
     items: PropTypes.object,
@@ -150,4 +150,4 @@ class Noodlegraph extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(Noodlegraph)
+export default DragDropContext(HTML5Backend)(SceneGraph)

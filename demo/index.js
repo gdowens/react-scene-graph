@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import React, { Component, PropTypes } from 'react';
 import update from 'react/lib/update';
 import _ from 'lodash';
-import Noodlegraph from '../src';
+import SceneGraph from '../src';
 import Scene from './components/Scene';
 import SceneHeader from './components/SceneHeader';
 
@@ -51,7 +51,7 @@ export default class Demo extends Component {
 
   render() {
     return (
-      <Noodlegraph
+      <SceneGraph
         containerStyle={{width: 2000, height: 2000}}
         data={this.state}
         onChange={this.handleChange}

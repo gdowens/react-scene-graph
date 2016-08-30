@@ -1,5 +1,5 @@
 import 'babel-polyfill';
 
-import Noodlegraph from './components/Noodlegraph';
+import SceneGraph from './components/SceneGraph';
 
-export default Noodlegraph;
+export default SceneGraph;

@@ -3,7 +3,7 @@ import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import ItemTypes from '../constants/ItemTypes';
 
-class SceneHeaderBase extends Component {
+class SceneHeader extends Component {
   static propTypes = {
     connectSceneDragPreview: PropTypes.func.isRequired,
     connectSceneDragSource: PropTypes.func.isRequired,
@@ -59,4 +59,4 @@ export default DragSource(
   ItemTypes.SCENE,
   sceneSource,
   dragSceneCollect
-)(SceneHeaderBase);
+)(SceneHeader);
