@@ -88,8 +88,8 @@ const config = {
     }),
   ],
 
-  // React externally
-  externals: [{
+  // React externally for prod build
+  externals: isDebug ? [] : [{
     react: {
       root: 'React',
       commonjs2: 'react',
@@ -115,14 +115,6 @@ const config = {
           cacheDirectory: false,
           presets: ['es2015', 'react', 'stage-0']
         }
-      },
-      {
-        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
-        loader: 'url-loader?limit=10000',
-      },
-      {
-        test: /\.(eot|ttf|wav|mp3)$/,
-        loader: 'file-loader',
       },
     ],
   }
