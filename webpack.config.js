@@ -45,7 +45,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, './public/dist'),
     publicPath: '/dist/',
-    filename: isDebug ? '[name].js?[hash]' : '[name].[hash].js',
+    filename: isDebug ? '[name].js?[hash]' : '[name].js',
     chunkFilename: isDebug ? '[id].js?[chunkhash]' : '[id].[chunkhash].js',
     sourcePrefix: '  ',
     libraryTarget: 'umd',
@@ -87,6 +87,12 @@ const config = {
       prettyPrint: true,
     }),
   ],
+
+  // React externally
+  externals: {
+    "react": "React",
+    "react-dom": "ReactDOM"
+  },
 
   // Options affecting the normal modules
   module: {
