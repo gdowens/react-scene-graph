@@ -12,6 +12,10 @@
     "react",
     "network",
     "node",
+    "screen",
+    "drag",
+    "draggable",
+    "drop",
     "scene"
   ],
   "author": "Gabe G'Sell",
