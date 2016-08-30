@@ -55,10 +55,7 @@ export default class Demo extends Component {
         containerStyle={{width: 2000, height: 2000}}
         data={this.state}
         onChange={this.handleChange}
-        onDragConnectionEnd={this.handleDragConnectionEnd}
         onDragConnectionStart={this.handleDragConnectionStart}
-        onDragSceneStart={this.handleDragSceneStart}
-        onDragSceneEnd={this.handleDragSceneEnd}
         renderScene={this.renderScene}
         renderSceneHeader={this.renderSceneHeader}
         showConnections={false}

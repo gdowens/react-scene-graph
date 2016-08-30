@@ -9,20 +9,22 @@ import getUUID from '../utils/getUUID';
 
 class Noodlegraph extends Component {
   static propTypes = {
+    containerStyle: PropTypes.object,
     items: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
-    style: PropTypes.object,
+    showConnections: PropTypes.bool,
   }
 
   static defaultProps = {
     containerStyle: {
       width: 500,
       height: 500,
-    }
-  }
+    },
+    showConnections: true,
+  };
 
   handleDragConnectionEnd = (sourceScene, sourceInitialOffset, targetScene) => {
     let newConnections = {
@@ -114,7 +116,6 @@ class Noodlegraph extends Component {
     const {
       containerStyle,
       data,
-      onDragConnectionEnd,
       onDragConnectionStart,
       onDragSceneEnd,
       renderScene,
@@ -125,7 +126,6 @@ class Noodlegraph extends Component {
       <div style={containerStyle}>
         <Container
           connections={data.connections}
-          onDragConnectionEnd={this.handleDragConnectionEnd}
           onDragConnectionStart={onDragConnectionStart}
           onDragSceneEnd={this.handleDragSceneEnd}
           onTargetlessConnectionDrop={this.handleRemoveConnection}
