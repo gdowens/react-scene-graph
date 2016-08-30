@@ -29,6 +29,8 @@ const babelInclude = isDebug ? [
   path.resolve(__dirname, './src')
 ] : [ path.resolve(__dirname, './src') ];
 
+const webpackEntry = isDebug ? ['./main.js'] : ['./src/index.js'];
+
 // Webpack configuration (main.js => public/dist/main.{hash}.js)
 // http://webpack.github.io/docs/configuration.html
 const config = {
@@ -37,10 +39,7 @@ const config = {
   context: __dirname,
 
   // The entry point for the bundle
-  entry: [
-    /* The main entry point of your JavaScript application */
-    './main.js',
-  ],
+  entry: webpackEntry,
 
   // Options affecting the output of the compilation
   output: {
