@@ -53,6 +53,8 @@
     "connect-history-api-fallback": "^1.2.0",
     "del": "^2.2.1",
     "ejs": "^2.4.2",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
     "react-hot-loader": "^3.0.0-beta.2",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
