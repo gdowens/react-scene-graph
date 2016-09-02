@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { DragLayer } from 'react-dnd';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
-import ConnectionSVG from './CustomDragLayer/ConnectionSVG';
+import DumbConnection from './CustomDragLayer/DumbConnection';
 import SVGComponent from './SVGComponent';
 import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
 
@@ -100,7 +100,7 @@ class CustomDragLayer extends Component {
       connection.startY :
       connection.startY + yDelta;
     const endLocation = getEndingConnectionLocation(toScene);
-    return <ConnectionSVG
+    return <DumbConnection
       key={connection.id}
       startX={startX}
       startY={startY}
@@ -114,14 +114,12 @@ class CustomDragLayer extends Component {
 
     return (
       <div style={layerStyles}>
-        <SVGComponent width={viewport.width} height={viewport.height}>
-          <ConnectionSVG
-            startX={initialOffset.x}
-            startY={initialOffset.y}
-            endX={currentOffset.x}
-            endY={currentOffset.y}
-          />
-        </SVGComponent>
+        <DumbConnection
+          startX={initialOffset.x}
+          startY={initialOffset.y}
+          endX={currentOffset.x}
+          endY={currentOffset.y}
+        />
       </div>
     );
   }
@@ -134,14 +132,12 @@ class CustomDragLayer extends Component {
 
     return (
       <div style={layerStyles}>
-        <SVGComponent width={viewport.width} height={viewport.height}>
-          <ConnectionSVG
-            startX={startingLoc.x}
-            startY={startingLoc.y}
-            endX={endingLoc.x}
-            endY={endingLoc.y}
-          />
-        </SVGComponent>
+        <DumbConnection
+          startX={startingLoc.x}
+          startY={startingLoc.y}
+          endX={endingLoc.x}
+          endY={endingLoc.y}
+        />
       </div>
     );
   }
@@ -182,11 +178,9 @@ class CustomDragLayer extends Component {
           {renderSceneHeader(item)}
           {renderScene(item)}
         </div>
-        <SVGComponent width={viewport.width} height={viewport.height}>
           {Object.keys(connectionsInMotion)
             .map(key => this.renderConnection(connectionsInMotion[key]))
           }
-        </SVGComponent>
       </div>
     );
   }
