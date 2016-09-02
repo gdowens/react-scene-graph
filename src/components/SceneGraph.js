@@ -34,6 +34,7 @@ class SceneGraph extends Component {
       startY: sourceInitialOffset.y,
       to: targetScene.id,
     };
+    console.log(sourceInitialOffset);
 
     this.props.onChange(update(this.props.data, {
       connections: { $set: newConnections },

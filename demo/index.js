@@ -61,7 +61,7 @@ export default class Demo extends Component {
         onDragConnectionStart={this.handleDragConnectionStart}
         renderScene={this.renderScene}
         renderSceneHeader={this.renderSceneHeader}
-        showConnections={false}
+        showConnections={true}
       />
     )
   }
