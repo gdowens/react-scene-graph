@@ -9,7 +9,6 @@ import getUUID from '../utils/getUUID';
 
 class SceneGraph extends Component {
   static propTypes = {
-    containerStyle: PropTypes.object,
     items: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
@@ -19,10 +18,6 @@ class SceneGraph extends Component {
   }
 
   static defaultProps = {
-    containerStyle: {
-      width: 500,
-      height: 500,
-    },
     showConnections: true,
   };
 
@@ -114,7 +109,6 @@ class SceneGraph extends Component {
 
   render() {
     const {
-      containerStyle,
       data,
       onDragConnectionStart,
       onDragSceneEnd,
@@ -123,7 +117,7 @@ class SceneGraph extends Component {
     } = this.props
 
     return (
-      <div style={containerStyle}>
+      <div>
         <Container
           connections={data.connections}
           onDragConnectionEnd={this.handleDragConnectionEnd}

@@ -48,16 +48,17 @@ class Container extends Component {
       y: clickAbsolutePosition.y - scene.y,
     };
 
-    const connectionOrigin = getStartingConnectionLocation(scene, clickAbsolutePosition);
-
     const relativeStartLocation = onDragConnectionStart(scene, clickRelativePosition);
+
     const absoluteStartLocation = !_.isEmpty(relativeStartLocation) ? {
       x: relativeStartLocation.x + scene.x,
       y: relativeStartLocation.y + scene.y,
     } : null;
+
     this.setState({
       currentConnectionOrigin: absoluteStartLocation,
     });
+    return absoluteStartLocation;
   }
 
   handleSceneDragChange = (draggedSceneId, isStartingDrag, delta) => {

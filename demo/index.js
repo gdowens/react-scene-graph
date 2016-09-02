@@ -56,7 +56,6 @@ export default class Demo extends Component {
   render() {
     return (
       <SceneGraph
-        containerStyle={{width: 2000, height: 2000}}
         data={this.state}
         onChange={this.handleChange}
         onDragConnectionStart={this.handleDragConnectionStart}

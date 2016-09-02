@@ -109,18 +109,16 @@ class CustomDragLayer extends Component {
     />
   }
 
-  renderConnectionBeingDragged = () => {
+  renderNewConnectionBeingDragged = () => {
     const { currentOffset, initialOffset, viewport } = this.props;
 
     return (
-      <div style={layerStyles}>
-        <DumbConnection
-          startX={initialOffset.x}
-          startY={initialOffset.y}
-          endX={currentOffset.x}
-          endY={currentOffset.y}
-        />
-      </div>
+      <DumbConnection
+        startX={initialOffset.x}
+        startY={initialOffset.y}
+        endX={currentOffset.x}
+        endY={currentOffset.y}
+      />
     );
   }
 
@@ -131,14 +129,12 @@ class CustomDragLayer extends Component {
     const endingLoc = isStart ? getEndingConnectionLocation(endScene) : currentOffset;
 
     return (
-      <div style={layerStyles}>
-        <DumbConnection
-          startX={startingLoc.x}
-          startY={startingLoc.y}
-          endX={endingLoc.x}
-          endY={endingLoc.y}
-        />
-      </div>
+      <DumbConnection
+        startX={startingLoc.x}
+        startY={startingLoc.y}
+        endX={endingLoc.x}
+        endY={endingLoc.y}
+      />
     );
   }
 
@@ -160,7 +156,7 @@ class CustomDragLayer extends Component {
     }
 
     if(itemType === ItemTypes.NEW_CONNECTION) {
-      return this.renderConnectionBeingDragged();
+      return this.renderNewConnectionBeingDragged();
     } else if (itemType === ItemTypes.CONNECTION_START) {
       return this.renderExistingConnectionBeingDragged(true);
     } else if (itemType === ItemTypes.CONNECTION_END) {

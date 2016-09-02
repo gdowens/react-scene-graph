@@ -64,7 +64,7 @@ class DraggableScene extends Component {
             canDrag={!_.isEmpty(connectionLocation)}
             key={scene.id}
             renderScene={renderScene}
-            scene={scene} 
+            scene={scene}
             onTargetlessConnectionDrop={onTargetlessConnectionDrop}
           />
         </div>
@@ -79,6 +79,7 @@ const connectionTarget = {
       connectionLocation,
       onDragConnectionStart,
       onDragConnectionEnd,
+      onTargetlessConnectionDrop,
       updateConnectionStart,
       updateConnectionEnd,
       scene,
@@ -90,8 +91,12 @@ const connectionTarget = {
       onDragConnectionEnd(connection, connectionLocation, scene);
     } else if (itemType === ItemTypes.CONNECTION_START) {
       const clientOffset = monitor.getClientOffset();
-      const startingConnectionLocation = getStartingConnectionLocation(scene, clientOffset);
-      updateConnectionStart(connection.id, startingConnectionLocation, scene.id);
+      const connectionStartLoc = onDragConnectionStart(scene, clientOffset);
+      if (!_.isEmpty(connectionStartLoc)) {
+        updateConnectionStart(connection.id, connectionStartLoc, scene.id);
+      } else {
+        onTargetlessConnectionDrop(connection.id);
+      }
     } else if (itemType === ItemTypes.CONNECTION_END) {
       updateConnectionEnd(connection.id, scene.id);
     }
