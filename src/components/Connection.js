@@ -7,21 +7,23 @@ import PureLine from './PureLine';
 import SVGComponent from './SVGComponent';
 import Line from './Line';
 const CIRCLE_RADIUS = 3;
-const START_STROKE_COLOR = "blue";
-const END_STROKE_COLOR = "red";
+const START_STROKE_COLOR = "#4A90E2";
+const END_STROKE_COLOR = "#E15947";
 const STROKE_WIDTH = 2;
 
 function getCircleStyle (x, y, end) {
   const strokeColor = end ? END_STROKE_COLOR : START_STROKE_COLOR;
+  const circleSize = 5;
   return {
-    height: '5px',
-    width: '5px',
+    height: `${circleSize}px`,
+    width: `${circleSize}px`,
     borderRadius: '50%',
     border: `${STROKE_WIDTH}px solid ${strokeColor}`,
     position: 'fixed',
     left: x,
     top: y,
     backgroundColor: 'white',
+    zIndex: 2,
   };
 }
 
@@ -66,6 +68,7 @@ class ConnectionBase extends Component {
 
     const { startX, startY } = connection;
     const { x: endX, y: endY } = endLocation;
+    const lineOffset = CIRCLE_RADIUS;
 
     const svgContainerStyle = {
       position: 'absolute',
@@ -74,19 +77,21 @@ class ConnectionBase extends Component {
 
     return (
       <div>
-        {startConnectionDragSource(
-          <div style={getCircleStyle(startX, startY, false)}/>
-        )}
+        <div ref="startHandle">
+          {startConnectionDragSource(
+            <div style={getCircleStyle(startX, startY, false)}/>
+          )}
+        </div>
         <SVGComponent
           height={'100%'}
           width={'100%'}
           style={svgContainerStyle}
         >
           <Line
-            x1={startX}
-            y1={startY - CIRCLE_RADIUS}
-            x2={endX}
-            y2={endY - CIRCLE_RADIUS}
+            x1={startX - lineOffset}
+            y1={startY - lineOffset}
+            x2={endX - lineOffset}
+            y2={endY - lineOffset}
             strokeWidth={STROKE_WIDTH}
             stroke={START_STROKE_COLOR}
           />

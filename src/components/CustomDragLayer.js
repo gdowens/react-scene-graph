@@ -18,7 +18,7 @@ const layerStyles = {
 };
 
 function getItemStyles(props) {
-  const { initialSourceOffset, currentSourceOffset } = props;
+  const { currentSourceOffset } = props;
 
   let { x, y } = currentSourceOffset;
 
@@ -40,8 +40,9 @@ function getModifiedScene(props, id) {
   if (id === item.id) {
     return {
       ...item,
-      x: currentSourceOffset.x,
-      y: currentSourceOffset.y,
+      // need to dig into this mismatch.
+      x: currentSourceOffset.x - 8,
+      y: currentSourceOffset.y - 8,
     };
   } else {
     return {
@@ -102,6 +103,7 @@ class CustomDragLayer extends Component {
     const endLocation = getEndingConnectionLocation(toScene);
     return <DumbConnection
       key={connection.id}
+      adjustLine={true}
       startX={startX}
       startY={startY}
       endX={endLocation.x}
@@ -112,6 +114,8 @@ class CustomDragLayer extends Component {
   renderNewConnectionBeingDragged = () => {
     const { currentOffset, initialOffset, viewport } = this.props;
 
+    console.log("new drag");
+    console.log([initialOffset.x, initialOffset.y], [currentOffset.x, currentOffset.y]);
     return (
       <DumbConnection
         startX={initialOffset.x}
@@ -128,6 +132,8 @@ class CustomDragLayer extends Component {
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
     const endingLoc = isStart ? getEndingConnectionLocation(endScene) : currentOffset;
 
+    console.log("existing drag");
+    console.log([startingLoc.x, startingLoc.y], [endingLoc.x, endingLoc.y]);
     return (
       <DumbConnection
         startX={startingLoc.x}
