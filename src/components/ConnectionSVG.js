@@ -59,7 +59,7 @@ class ConnectionSVGBase extends Component {
     render() {
         const { startConnectionDragSource, endConnectionDragSource, startX, startY, endX, endY } = this.props;
         const lineOffset = parseInt(CIRCLE_RADIUS, 10);
-
+        console.log("dragging", lineOffset)
         return (
             <SVGComponent>
                 {startConnectionDragSource(

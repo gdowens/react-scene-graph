@@ -4,15 +4,12 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import ItemTypes from '../constants/ItemTypes';
 import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
 import PureLine from './PureLine';
+import SVGComponent from './SVGComponent';
+import Line from './Line';
 const CIRCLE_RADIUS = 3;
 const START_STROKE_COLOR = "blue";
 const END_STROKE_COLOR = "red";
 const STROKE_WIDTH = 2;
-
-const fullSizedStyle = {
-  height: '100%',
-  width: '100%',
-};
 
 function getCircleStyle (x, y, end) {
   const strokeColor = end ? END_STROKE_COLOR : START_STROKE_COLOR;
@@ -22,8 +19,8 @@ function getCircleStyle (x, y, end) {
     borderRadius: '50%',
     border: `${STROKE_WIDTH}px solid ${strokeColor}`,
     position: 'fixed',
-    left: x - 4,
-    top: y - 4,
+    left: x,
+    top: y,
     backgroundColor: 'white',
   };
 }
@@ -70,22 +67,30 @@ class ConnectionBase extends Component {
     const { startX, startY } = connection;
     const { x: endX, y: endY } = endLocation;
 
+    const svgContainerStyle = {
+      position: 'absolute',
+      pointerEvents: 'none',
+    };
+
     return (
       <div>
         {startConnectionDragSource(
           <div style={getCircleStyle(startX, startY, false)}/>
         )}
-        <PureLine
-          from={{
-            x: startX + CIRCLE_RADIUS,
-            y: startY - 8,
-          }}
-          to={{
-            x: endX - CIRCLE_RADIUS,
-            y: endY - 8,
-          }}
-          borderBottom={`${STROKE_WIDTH}px solid ${START_STROKE_COLOR}`}
-        />
+        <SVGComponent
+          height={'100%'}
+          width={'100%'}
+          style={svgContainerStyle}
+        >
+          <Line
+            x1={startX}
+            y1={startY - CIRCLE_RADIUS}
+            x2={endX}
+            y2={endY - CIRCLE_RADIUS}
+            strokeWidth={STROKE_WIDTH}
+            stroke={START_STROKE_COLOR}
+          />
+        </SVGComponent>
         {endConnectionDragSource(
           <div style={getCircleStyle(endX, endY, true)}/>
         )}

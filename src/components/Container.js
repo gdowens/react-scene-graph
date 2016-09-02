@@ -50,9 +50,13 @@ class Container extends Component {
 
     const connectionOrigin = getStartingConnectionLocation(scene, clickAbsolutePosition);
 
-    const currentConnectionBox = onDragConnectionStart(scene, clickRelativePosition);
+    const relativeStartLocation = onDragConnectionStart(scene, clickRelativePosition);
+    const absoluteStartLocation = !_.isEmpty(relativeStartLocation) ? {
+      x: relativeStartLocation.x + scene.x,
+      y: relativeStartLocation.y + scene.y,
+    } : null;
     this.setState({
-      currentConnectionOrigin: currentConnectionBox ? connectionOrigin : null,
+      currentConnectionOrigin: absoluteStartLocation,
     });
   }
 
