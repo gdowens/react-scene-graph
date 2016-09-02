@@ -18,6 +18,7 @@ class Container extends Component {
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
     scenes: PropTypes.object,
+    showConnections: PropTypes.bool.isRequired,
     updateScene: PropTypes.func.isRequired,
     updateConnectionEnd: PropTypes.func.isRequired,
     updateConnectionStart: PropTypes.func.isRequired,
@@ -124,14 +125,20 @@ class Container extends Component {
   }
 
   render() {
-    const { connectDropTarget, connections, scenes, viewport } = this.props;
+    const {
+      connectDropTarget,
+      connections,
+      scenes,
+      showConnections,
+      viewport,
+    } = this.props;
 
     return connectDropTarget(
       <div>
         {Object.keys(scenes)
           .map(key => this.renderDraggableScene(scenes[key]))
         }
-        {Object.keys(connections)
+        {showConnections && Object.keys(connections)
           .map(key => this.renderConnection(connections[key]))
         }
       </div>

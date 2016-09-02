@@ -76,6 +76,7 @@ class CustomDragLayer extends Component {
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
     scenes: PropTypes.object,
+    showConnections: PropTypes.bool.isRequired,
     viewport: PropTypes.object.isRequired,
   };
 
@@ -114,8 +115,6 @@ class CustomDragLayer extends Component {
   renderNewConnectionBeingDragged = () => {
     const { currentOffset, initialOffset, viewport } = this.props;
 
-    console.log("new drag");
-    console.log([initialOffset.x, initialOffset.y], [currentOffset.x, currentOffset.y]);
     return (
       <DumbConnection
         startX={initialOffset.x}
@@ -132,8 +131,6 @@ class CustomDragLayer extends Component {
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
     const endingLoc = isStart ? getEndingConnectionLocation(endScene) : currentOffset;
 
-    console.log("existing drag");
-    console.log([startingLoc.x, startingLoc.y], [endingLoc.x, endingLoc.y]);
     return (
       <DumbConnection
         startX={startingLoc.x}
@@ -154,6 +151,7 @@ class CustomDragLayer extends Component {
       itemType,
       renderScene,
       renderSceneHeader,
+      showConnections,
       viewport,
     } = this.props;
 
@@ -180,7 +178,7 @@ class CustomDragLayer extends Component {
           {renderSceneHeader(item)}
           {renderScene(item)}
         </div>
-          {Object.keys(connectionsInMotion)
+          {showConnections && Object.keys(connectionsInMotion)
             .map(key => this.renderConnection(connectionsInMotion[key]))
           }
       </div>

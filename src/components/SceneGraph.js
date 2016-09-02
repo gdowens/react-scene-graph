@@ -114,6 +114,7 @@ class SceneGraph extends Component {
       onDragSceneEnd,
       renderScene,
       renderSceneHeader,
+      showConnections,
     } = this.props
 
     return (
@@ -127,6 +128,7 @@ class SceneGraph extends Component {
           renderScene={renderScene}
           renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}
+          showConnections={showConnections}
           updateConnectionStart={this.handleUpdateConnectionStart}
           updateConnectionEnd={this.handleUpdateConnectionEnd}
           updateScene={this.handleUpdateScene}
@@ -137,6 +139,7 @@ class SceneGraph extends Component {
           renderScene={renderScene}
           renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}
+          showConnections={showConnections}
           viewport={data.viewport}
         />
       </div>
