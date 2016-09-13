@@ -36,7 +36,6 @@ class SceneGraph extends Component {
       startY: sourceInitialOffset.y,
       to: targetScene.id,
     };
-    console.log(sourceInitialOffset);
 
     this.props.onConnectionChange('create', [newConnections[connectionId]]);
     this.props.onChange(update(this.props.data, {
@@ -48,12 +47,13 @@ class SceneGraph extends Component {
     const updatedConnections = []
     const newConnections = _.mapValues(this.props.data.connections, (connection) => {
       if (connection.from === scene.id) {
-        const upConn = {
+        const updatedConnection = {
           ...connection,
           startX: connection.startX + delta.x,
           startY: connection.startY + delta.y,
         };
-        updatedConnections.push(upConn)
+        updatedConnections.push(updatedConnection);
+        return updatedConnection;
       } else {
         return connection;
       }
