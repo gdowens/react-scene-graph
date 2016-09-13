@@ -19,7 +19,7 @@ function getCircleStyle (x, y, end) {
     width: `${circleSize}px`,
     borderRadius: '50%',
     border: `${STROKE_WIDTH}px solid ${strokeColor}`,
-    position: 'fixed',
+    position: 'absolute',
     left: x,
     top: y,
     backgroundColor: 'white',
