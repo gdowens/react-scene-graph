@@ -104,7 +104,6 @@ class CustomDragLayer extends Component {
     const endLocation = getEndingConnectionLocation(toScene);
     return <DumbConnection
       key={connection.id}
-      adjustLine={true}
       startX={startX}
       startY={startY}
       endX={endLocation.x}

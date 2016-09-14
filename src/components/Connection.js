@@ -6,23 +6,21 @@ import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
 import PureLine from './PureLine';
 import SVGComponent from './SVGComponent';
 import CurvedLine from './CurvedLine';
-const CIRCLE_RADIUS = 3;
-const START_STROKE_COLOR = "#4A90E2";
-const END_STROKE_COLOR = "#E15947";
+const STROKE_COLOR = "#4A90E2";
 const STROKE_WIDTH = 2;
 
 function getCircleStyle (x, y, end) {
-  const strokeColor = START_STROKE_COLOR;
-  const circleSize = 5;
+  const circleSize = end ? 10 : 4;
+  const circleOffset = end ? 6 : 4;
   return {
-    height: `${end ? circleSize * 2 : circleSize}px`,
-    width: `${end ? circleSize * 2 : circleSize}px`,
+    height: `${circleSize}px`,
+    width: `${circleSize}px`,
     borderRadius: '50%',
-    border: `${STROKE_WIDTH}px solid ${strokeColor}`,
+    border: `${STROKE_WIDTH}px solid ${STROKE_COLOR}`,
     position: 'absolute',
-    left: x,
-    top: y,
-    backgroundColor: strokeColor,
+    left: x - circleOffset,
+    top: y - circleOffset,
+    backgroundColor: STROKE_COLOR,
     zIndex: 2,
   };
 }
@@ -68,7 +66,6 @@ class ConnectionBase extends Component {
 
     const { startX, startY } = connection;
     const { x: endX, y: endY } = endLocation;
-    const lineOffset = CIRCLE_RADIUS / 2;
 
     // Can pass this to CurvedLine as reverseOrientation prop
     // to randomize the orientation of the bezier.
@@ -92,12 +89,12 @@ class ConnectionBase extends Component {
           style={svgContainerStyle}
         >
           <CurvedLine
-            startX={startX - lineOffset}
-            startY={startY - lineOffset}
-            endX={endX - lineOffset}
-            endY={endY - lineOffset}
+            startX={startX}
+            startY={startY}
+            endX={endX}
+            endY={endY}
             strokeWidth={STROKE_WIDTH}
-            strokeColor={START_STROKE_COLOR}
+            strokeColor={STROKE_COLOR}
           />
         </SVGComponent>
         {endConnectionDragSource(
