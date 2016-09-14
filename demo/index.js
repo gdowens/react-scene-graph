@@ -30,8 +30,8 @@ export default class Demo extends Component {
     if (relativeClickLoc.x >= 33 && relativeClickLoc.x <= 83 &&
       relativeClickLoc.y >= 72 && relativeClickLoc.y <= 172) {
       return {
-        x: 83,
-        y: Math.floor(Math.random() * 100) + 33 + sourceScene.height / 5,
+        x: 83 + sourceScene.x,
+        y: (Math.floor(Math.random() * 100) + 33 + sourceScene.height / 5) + sourceScene.y,
       };
     }
     return null;
