@@ -101,7 +101,7 @@ class CustomDragLayer extends Component {
     const startY = itemIsTarget ?
       connection.startY :
       connection.startY + yDelta;
-    const endLocation = getEndingConnectionLocation(toScene);
+    const endLocation = getEndingConnectionLocation(toScene, fromScene.x < toScene.x);
     return <DumbConnection
       key={connection.id}
       startX={startX}
@@ -125,10 +125,10 @@ class CustomDragLayer extends Component {
   }
 
   renderExistingConnectionBeingDragged = (isStart) => {
-    const { currentOffset, item, scenes, viewport } = this.props;
+    const { currentOffset, initialOffset, item, scenes, viewport } = this.props;
     const endScene = scenes[item.to];
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
-    const endingLoc = isStart ? getEndingConnectionLocation(endScene) : currentOffset;
+    const endingLoc = isStart ? getEndingConnectionLocation(endScene, initialOffset.x < endScene.x) : currentOffset;
 
     return (
       <DumbConnection

@@ -62,9 +62,8 @@ class ConnectionBase extends Component {
 
   render() {
     const { startConnectionDragSource, endConnectionDragSource, connection, endingScene } = this.props;
-    const endLocation = getEndingConnectionLocation(endingScene);
-
     const { startX, startY } = connection;
+    const endLocation = getEndingConnectionLocation(endingScene, startX < endingScene.x);
     const { x: endX, y: endY } = endLocation;
 
     // Can pass this to CurvedLine as reverseOrientation prop

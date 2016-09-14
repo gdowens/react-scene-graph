@@ -1,6 +1,6 @@
-export default function(scene) {
+export default function(scene, leftToRight) {
     return {
-        x: scene.x,
+        x: leftToRight ? scene.x : scene.x + scene.width,
         y: scene.y + scene.height / 2,
     };
 }
