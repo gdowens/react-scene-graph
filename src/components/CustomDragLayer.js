@@ -87,6 +87,13 @@ class CustomDragLayer extends Component {
     scenes: {},
   };
 
+  getEndingVertOffset = (connection, toScene) => {
+    const connsEndingHere = _.sortBy(_.map(_.filter(this.props.connections, (conn, id) => {
+      return conn.to === toScene.id;
+    }), 'id'));
+    return (1 / (connsEndingHere.length + 1)) * (connsEndingHere.indexOf(connection.id) + 1);
+  }
+
   renderConnection(connection) {
     const { currentSourceOffset, initialSourceOffset, item } = this.props;
 
@@ -101,7 +108,9 @@ class CustomDragLayer extends Component {
     const startY = itemIsTarget ?
       connection.startY :
       connection.startY + yDelta;
-    const endLocation = getEndingConnectionLocation(toScene, fromScene.x < toScene.x);
+    const endingVertOffset = this.getEndingVertOffset(connection, toScene);
+
+    const endLocation = getEndingConnectionLocation(toScene, fromScene.x < toScene.x, endingVertOffset);
     return <DumbConnection
       key={connection.id}
       startX={startX}
@@ -128,7 +137,8 @@ class CustomDragLayer extends Component {
     const { currentOffset, initialOffset, item, scenes, viewport } = this.props;
     const endScene = scenes[item.to];
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
-    const endingLoc = isStart ? getEndingConnectionLocation(endScene, initialOffset.x < endScene.x) : currentOffset;
+    const endingVertOffset = this.getEndingVertOffset(item, toScene);
+    const endingLoc = isStart ? getEndingConnectionLocation(endScene, initialOffset.x < endScene.x, endingVertOffset) : currentOffset;
 
     return (
       <DumbConnection

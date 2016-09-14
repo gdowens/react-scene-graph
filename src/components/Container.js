@@ -35,6 +35,13 @@ class Container extends Component {
     currentConnectionBox: null,
   };
 
+  getEndingVertOffset = (connection, toScene) => {
+    const connsEndingHere = _.sortBy(_.map(_.filter(this.props.connections, (conn, id) => {
+      return conn.to === toScene.id;
+    }), 'id'));
+    return (1 / (connsEndingHere.length + 1)) * (connsEndingHere.indexOf(connection.id) + 1);
+  }
+
   handleConnectionDragChange = (draggedConnection, isStartingDrag) => {
     this.setState({
       draggedConnection: isStartingDrag ? draggedConnection : {},
@@ -78,9 +85,11 @@ class Container extends Component {
         connection.id === draggedConnection.id) {
       return null;
     }
+    const endingVertOffset = this.getEndingVertOffset(connection, toScene);
     return <Connection
       connection={connection}
       endingScene={toScene}
+      endingVertOffset={endingVertOffset}
       key={connection.id}
       onConnectionDragChange={this.handleConnectionDragChange}
       onTargetlessConnectionDrop={onTargetlessConnectionDrop}
