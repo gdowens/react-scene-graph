@@ -37,14 +37,16 @@ class SceneGraph extends Component {
       to: targetScene.id,
     };
 
-    this.props.onConnectionChange('create', [newConnections[connectionId]]);
+    this.props.onConnectionChange('create', {
+      [connectionId]: newConnections[connectionId],
+    });
     this.props.onChange(update(this.props.data, {
       connections: { $set: newConnections },
     }));
   }
 
   handleDragSceneEnd = (scene, delta) => {
-    const updatedConnections = []
+    const updatedConnections = {}
     const newConnections = _.mapValues(this.props.data.connections, (connection) => {
       if (connection.from === scene.id) {
         const updatedConnection = {
@@ -52,14 +54,14 @@ class SceneGraph extends Component {
           startX: connection.startX + delta.x,
           startY: connection.startY + delta.y,
         };
-        updatedConnections.push(updatedConnection);
+        updatedConnections[connection.id] = updatedConnection
         return updatedConnection;
       } else {
         return connection;
       }
     });
 
-    this.props.onConnectionChange('update', [updatedConnections])
+    this.props.onConnectionChange('update', updatedConnections)
     this.props.onChange(update(this.props.data, {
       scenes: {
         [scene.id]: {
@@ -72,12 +74,14 @@ class SceneGraph extends Component {
   }
 
   handleUpdateConnectionStart = (id, newLocation, newStartSceneId) => {
-    this.props.onConnectionChange('update', [{
+    this.props.onConnectionChange('update', {
+      [id]: {
         ...this.props.data.connections[id],
         from: newStartSceneId,
         startX: newLocation.x,
         startY: newLocation.y,
-    }])
+      }
+    })
     this.props.onChange(update(this.props.data, {
       connections: {
         [id]: {
@@ -90,10 +94,12 @@ class SceneGraph extends Component {
   }
 
   handleUpdateConnectionEnd = (id, newEndSceneId) => {
-    this.props.onConnectionChange('update', [{
+    this.props.onConnectionChange('update', {
+      [id]: {
         ...this.props.data.connections[id],
         to: newEndSceneId,
-    }]);
+      }
+    });
     this.props.onChange(update(this.props.data, {
       connections: {
         [id]: {
@@ -116,7 +122,7 @@ class SceneGraph extends Component {
 
   handleRemoveConnection = (id) => {
     const { connections } = this.props.data;
-    this.props.onConnectionChange('delete', [connections[id]])
+    this.props.onConnectionChange('delete', {[id]: connections[id]})
     this.props.onChange(update(this.props.data, {
       connections: {
         $set: _.omit(connections, id),
