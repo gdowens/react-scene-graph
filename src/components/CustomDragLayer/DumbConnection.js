@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import SVGComponent from '../SVGComponent';
 import CurvedLine from '../CurvedLine';
+import shallowEqual from '../../utils/shallowEqual';
 
 const STROKE_COLOR = "#4A90E2";
 const STROKE_WIDTH = 2;
