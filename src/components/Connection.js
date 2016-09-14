@@ -3,9 +3,9 @@ import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import ItemTypes from '../constants/ItemTypes';
 import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
-import PureLine from './PureLine';
 import SVGComponent from './SVGComponent';
 import CurvedLine from './CurvedLine';
+import shallowEqual from '../utils/shallowEqual';
 const STROKE_COLOR = "#4A90E2";
 const STROKE_WIDTH = 2;
 
@@ -58,6 +58,10 @@ class ConnectionBase extends Component {
     } else if (!isEndConnectionDragging && nextProps.isEndConnectionDragging) {
       onConnectionDragChange(connection, true);
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !shallowEqual(nextProps, this.props);
   }
 
   render() {
