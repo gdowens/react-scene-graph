@@ -27,14 +27,10 @@ export default class Demo extends Component {
   }
 
   handleDragConnectionStart = (sourceScene, relativeClickLoc) => {
-    if (relativeClickLoc.x >= 33 && relativeClickLoc.x <= 83 &&
-      relativeClickLoc.y >= 72 && relativeClickLoc.y <= 172) {
-      return {
-        x: 83 + sourceScene.x,
-        y: (Math.floor(Math.random() * 100) + 33 + sourceScene.height / 5) + sourceScene.y,
-      };
+    return {
+      x: relativeClickLoc.x + sourceScene.x,
+      y: relativeClickLoc.y + sourceScene.y,
     }
-    return null;
   }
 
   renderScene = (scene) => {
