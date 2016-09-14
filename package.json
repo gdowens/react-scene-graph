@@ -2,7 +2,7 @@
   "name": "react-scene-graph",
   "version": "0.0.7",
   "description": "An npm package for building dynamic graphs in ReactJS",
-  "main": "public/main.js",
+  "main": "public/dist/main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gabergg/react-scene-graph.git"

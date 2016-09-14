@@ -5,24 +5,24 @@ import ItemTypes from '../constants/ItemTypes';
 import getEndingConnectionLocation from '../utils/getEndingConnectionLocation';
 import PureLine from './PureLine';
 import SVGComponent from './SVGComponent';
-import Line from './Line';
+import CurvedLine from './CurvedLine';
 const CIRCLE_RADIUS = 3;
 const START_STROKE_COLOR = "#4A90E2";
 const END_STROKE_COLOR = "#E15947";
 const STROKE_WIDTH = 2;
 
 function getCircleStyle (x, y, end) {
-  const strokeColor = end ? END_STROKE_COLOR : START_STROKE_COLOR;
+  const strokeColor = START_STROKE_COLOR;
   const circleSize = 5;
   return {
-    height: `${circleSize}px`,
-    width: `${circleSize}px`,
+    height: `${end ? circleSize * 2 : circleSize}px`,
+    width: `${end ? circleSize * 2 : circleSize}px`,
     borderRadius: '50%',
     border: `${STROKE_WIDTH}px solid ${strokeColor}`,
     position: 'absolute',
     left: x,
     top: y,
-    backgroundColor: 'white',
+    backgroundColor: strokeColor,
     zIndex: 2,
   };
 }
@@ -68,7 +68,11 @@ class ConnectionBase extends Component {
 
     const { startX, startY } = connection;
     const { x: endX, y: endY } = endLocation;
-    const lineOffset = CIRCLE_RADIUS;
+    const lineOffset = CIRCLE_RADIUS / 2;
+
+    // Can pass this to CurvedLine as reverseOrientation prop
+    // to randomize the orientation of the bezier.
+    const randomBoolFromConnId = parseInt(connection.id, 10) % 10 < 5;
 
     const svgContainerStyle = {
       position: 'absolute',
@@ -87,13 +91,13 @@ class ConnectionBase extends Component {
           width={'100%'}
           style={svgContainerStyle}
         >
-          <Line
-            x1={startX - lineOffset}
-            y1={startY - lineOffset}
-            x2={endX - lineOffset}
-            y2={endY - lineOffset}
+          <CurvedLine
+            startX={startX - lineOffset}
+            startY={startY - lineOffset}
+            endX={endX - lineOffset}
+            endY={endY - lineOffset}
             strokeWidth={STROKE_WIDTH}
-            stroke={START_STROKE_COLOR}
+            strokeColor={START_STROKE_COLOR}
           />
         </SVGComponent>
         {endConnectionDragSource(

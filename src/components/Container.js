@@ -5,7 +5,6 @@ import update from 'react/lib/update';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
 import DraggableScene from './DraggableScene';
-import getStartingConnectionLocation from '../utils/getStartingConnectionLocation';
 
 class Container extends Component {
   static propTypes = {
@@ -49,12 +48,7 @@ class Container extends Component {
       y: clickAbsolutePosition.y - scene.y,
     };
 
-    const relativeStartLocation = onDragConnectionStart(scene, clickRelativePosition);
-
-    const absoluteStartLocation = !_.isEmpty(relativeStartLocation) ? {
-      x: relativeStartLocation.x + scene.x,
-      y: relativeStartLocation.y + scene.y,
-    } : null;
+    const absoluteStartLocation = onDragConnectionStart(scene, clickRelativePosition);
 
     this.setState({
       currentConnectionOrigin: absoluteStartLocation,

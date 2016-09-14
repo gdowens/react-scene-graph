@@ -4,7 +4,6 @@ import { DropTarget } from 'react-dnd';
 import _ from 'lodash';
 import Scene from './Scene';
 import SceneHeader from './SceneHeader';
-import getStartingConnectionLocation from '../utils/getStartingConnectionLocation';
 
 class DraggableScene extends Component {
   static propTypes = {

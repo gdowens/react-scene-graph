@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import SVGComponent from '../SVGComponent';
-import Line from '../Line';
+import CurvedLine from '../CurvedLine';
 
 const CIRCLE_RADIUS = 3;
 const START_STROKE_COLOR = "#4A90E2";
@@ -8,17 +8,17 @@ const END_STROKE_COLOR = "#E15947";
 const STROKE_WIDTH = 2;
 
 function getCircleStyle (x, y, end) {
-  const strokeColor = end ? END_STROKE_COLOR : START_STROKE_COLOR;
+  const strokeColor = START_STROKE_COLOR;
   const circleSize = 5;
   return {
-    height: `${circleSize}px`,
-    width: `${circleSize}px`,
+    height: `${end ? circleSize * 2 : circleSize}px`,
+    width: `${end ? circleSize * 2 : circleSize}px`,
     borderRadius: '50%',
     border: `${STROKE_WIDTH}px solid ${strokeColor}`,
-    position: 'fixed',
+    position: 'absolute',
     left: x,
     top: y,
-    backgroundColor: 'white',
+    backgroundColor: strokeColor,
     zIndex: 2,
   };
 }
@@ -50,19 +50,19 @@ export default class DumbConnection extends Component {
 
         return (
           <div>
-            <div ref="startHandle" style={getCircleStyle(startX, startY, false)}/>
+            <div style={getCircleStyle(startX, startY, false)}/>
             <SVGComponent
               height={'100%'}
               width={'100%'}
               style={svgContainerStyle}
             >
-              <Line
-                x1={startX - startOffset}
-                y1={startY - startOffset}
-                x2={endX - endOffset}
-                y2={endY - endOffset}
+              <CurvedLine
+                startX={startX - startOffset}
+                startY={startY - startOffset}
+                endX={endX - endOffset}
+                endY={endY - endOffset}
                 strokeWidth={STROKE_WIDTH}
-                stroke={START_STROKE_COLOR}
+                strokeColor={START_STROKE_COLOR}
               />
             </SVGComponent>
             <div style={getCircleStyle(endX, endY, true)}/>
