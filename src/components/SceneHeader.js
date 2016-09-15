@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import ItemTypes from '../constants/ItemTypes';
+import shallowEqual from '../utils/shallowEqual';
 
 class SceneHeader extends Component {
   static propTypes = {
@@ -15,6 +16,10 @@ class SceneHeader extends Component {
 
   componentDidMount() {
     this.props.connectSceneDragPreview(getEmptyImage());
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !shallowEqual(nextProps, this.props);
   }
 
   componentWillReceiveProps(nextProps) {
