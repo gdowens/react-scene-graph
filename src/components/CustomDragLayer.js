@@ -137,7 +137,7 @@ class CustomDragLayer extends Component {
     const { currentOffset, initialOffset, item, scenes, viewport } = this.props;
     const endScene = scenes[item.to];
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
-    const endingVertOffset = this.getEndingVertOffset(item, toScene);
+    const endingVertOffset = this.getEndingVertOffset(item, endScene);
     const endingLoc = isStart ? getEndingConnectionLocation(endScene, initialOffset.x < endScene.x, endingVertOffset) : currentOffset;
 
     return (
