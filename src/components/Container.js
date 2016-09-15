@@ -5,6 +5,7 @@ import update from 'react/lib/update';
 import ItemTypes from '../constants/ItemTypes';
 import Connection from './Connection';
 import DraggableScene from './DraggableScene';
+import _ from 'lodash';
 
 class Container extends Component {
   static propTypes = {
@@ -33,6 +34,7 @@ class Container extends Component {
     draggedScene: {},
     currentConnectionOrigin: null,
     currentConnectionBox: null,
+    sceneHeaderHeight: 0,
   };
 
   getEndingVertOffset = (connection, toScene) => {
@@ -50,12 +52,17 @@ class Container extends Component {
 
   handleDragConnectionStart = (scene, clickAbsolutePosition) => {
     const { onDragConnectionStart } = this.props;
+    const { sceneHeaderHeight } = this.state;
     const clickRelativePosition = {
       x: clickAbsolutePosition.x - scene.x,
-      y: clickAbsolutePosition.y - scene.y,
+      y: clickAbsolutePosition.y - scene.y - sceneHeaderHeight,
     };
-
-    const absoluteStartLocation = onDragConnectionStart(scene, clickRelativePosition);
+    const relativeStartLocation = onDragConnectionStart(scene, clickRelativePosition);
+    const absoluteStartLocation = _.isEmpty(relativeStartLocation) ? null :
+      {
+        x: relativeStartLocation.x + scene.x,
+        y: relativeStartLocation.y + scene.y + sceneHeaderHeight,
+      };
 
     this.setState({
       currentConnectionOrigin: absoluteStartLocation,
@@ -74,6 +81,12 @@ class Container extends Component {
     this.setState({
       draggedScene: isStartingDrag ? draggedScene : {},
     });
+  }
+
+  handleSceneHeaderRef = (sceneHeaderHeight) => {
+    if(sceneHeaderHeight !== this.state.sceneHeaderHeight){
+      this.setState({sceneHeaderHeight});
+    }
   }
 
   renderConnection(connection) {
@@ -107,7 +120,7 @@ class Container extends Component {
       updateConnectionStart,
     } = this.props;
 
-    const { draggedScene, currentConnectionOrigin } = this.state;
+    const { currentConnectionOrigin, draggedScene } = this.state;
 
     return (
       <DraggableScene
@@ -117,6 +130,7 @@ class Container extends Component {
         onDragConnectionEnd={onDragConnectionEnd}
         onDragConnectionStart={this.handleDragConnectionStart}
         onSceneDragChange={this.handleSceneDragChange}
+        onSceneHeaderRef={this.handleSceneHeaderRef}
         onTargetlessConnectionDrop={onTargetlessConnectionDrop}
         renderScene={renderScene}
         renderSceneHeader={renderSceneHeader}

@@ -14,6 +14,7 @@ class DraggableScene extends Component {
     updateConnectionStart: PropTypes.func.isRequired,
     updateConnectionEnd: PropTypes.func.isRequired,
     onSceneDragChange: PropTypes.func.isRequired,
+    onSceneHeaderRef: PropTypes.func.isRequired,
     onTargetlessConnectionDrop: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
@@ -23,7 +24,6 @@ class DraggableScene extends Component {
   handleSceneMouseDown = (event) => {
     const { onDragConnectionStart, scene } = this.props;
     const {pageX: x, pageY: y} = event;
-
     onDragConnectionStart(scene, {x, y});
   }
 
@@ -33,6 +33,7 @@ class DraggableScene extends Component {
       connectionLocation,
       draggedScene,
       onSceneDragChange,
+      onSceneHeaderRef,
       onTargetlessConnectionDrop,
       renderScene,
       renderSceneHeader,
@@ -51,7 +52,13 @@ class DraggableScene extends Component {
     };
 
     return connectDropTarget(
-      <div style={styles}>
+      <div
+        ref={(node) => {
+          if(node) {
+            onSceneHeaderRef(node.getBoundingClientRect().height - scene.height);
+          }
+        }}
+        style={styles}>
         <SceneHeader
           key={`${scene.id}header`}
           renderSceneHeader={renderSceneHeader}
@@ -83,21 +90,21 @@ const connectionTarget = {
       updateConnectionEnd,
       scene,
     } = props;
-    const connection = monitor.getItem();
+    const item = monitor.getItem();
     const itemType = monitor.getItemType();
 
     if (itemType === ItemTypes.NEW_CONNECTION) {
-      onDragConnectionEnd(connection, connectionLocation, scene);
+      onDragConnectionEnd(item, connectionLocation, scene);
     } else if (itemType === ItemTypes.CONNECTION_START) {
       const clientOffset = monitor.getClientOffset();
       const connectionStartLoc = onDragConnectionStart(scene, clientOffset);
       if (!_.isEmpty(connectionStartLoc)) {
-        updateConnectionStart(connection.id, connectionStartLoc, scene.id);
+        updateConnectionStart(item.id, connectionStartLoc, scene.id);
       } else {
-        onTargetlessConnectionDrop(connection.id);
+        onTargetlessConnectionDrop(item.id);
       }
     } else if (itemType === ItemTypes.CONNECTION_END) {
-      updateConnectionEnd(connection.id, scene.id);
+      updateConnectionEnd(item.id, scene.id);
     }
   }
 }
