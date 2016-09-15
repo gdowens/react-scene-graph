@@ -28,8 +28,8 @@ export default class Demo extends Component {
 
   handleDragConnectionStart = (sourceScene, relativeClickLoc) => {
     return {
-      x: relativeClickLoc.x + sourceScene.x,
-      y: relativeClickLoc.y + sourceScene.y,
+      x: relativeClickLoc.x,
+      y: relativeClickLoc.y,
     }
   }
 
