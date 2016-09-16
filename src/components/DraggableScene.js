@@ -58,7 +58,7 @@ class DraggableScene extends Component {
     return connectDropTarget(
       <div
         ref={(node) => {
-          if(node && !this.firedHeaderRef) {
+          if(node && !this.firedHeaderRef && scene.height > 0) {
             this.firedHeaderRef = true;
             onSceneHeaderRef(node.getBoundingClientRect().height - scene.height);
           }
