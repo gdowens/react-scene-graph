@@ -113,7 +113,13 @@ const config = {
         include: babelInclude,
         query: {
           cacheDirectory: false,
-          presets: ['es2015', 'react', 'stage-0']
+          presets: ['es2015', 'react', 'stage-0'],
+          plugins: [
+            ["transform-runtime", {
+              "polyfill": false,
+              "regenerator": true
+            }]
+          ]
         }
       },
     ],

@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React, { Component, PropTypes } from 'react'
 import update from 'react/lib/update';
 import { DragDropContext } from 'react-dnd'
