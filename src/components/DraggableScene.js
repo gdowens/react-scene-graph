@@ -21,6 +21,10 @@ class DraggableScene extends Component {
     scene: PropTypes.object.isRequired,
   };
 
+  componentWillMount() {
+    this.firedHeaderRef = false;
+  }
+
   handleSceneMouseDown = (event) => {
     const { onDragConnectionStart, scene } = this.props;
     const {pageX: x, pageY: y} = event;
@@ -54,7 +58,8 @@ class DraggableScene extends Component {
     return connectDropTarget(
       <div
         ref={(node) => {
-          if(node) {
+          if(node && !this.firedHeaderRef) {
+            this.firedHeaderRef = true;
             onSceneHeaderRef(node.getBoundingClientRect().height - scene.height);
           }
         }}
