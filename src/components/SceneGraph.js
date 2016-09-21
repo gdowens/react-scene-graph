@@ -4,7 +4,7 @@ import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import CustomDragLayer from './CustomDragLayer'
 import Container from './Container'
-import getUUID from '../utils/getUUID';
+import getUUID from '../utils/getUUID'
 
 class SceneGraph extends Component {
   static propTypes = {
@@ -15,6 +15,8 @@ class SceneGraph extends Component {
     data: PropTypes.object,
     onConnectionChange: PropTypes.func,
     showConnections: PropTypes.bool,
+    style: PropTypes.object,
+    viewport: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -24,7 +26,7 @@ class SceneGraph extends Component {
   };
 
   handleDragConnectionEnd = (sourceScene, sourceInitialOffset, targetScene) => {
-    const { data, onChange, onConnectionChange } = this.props;
+    const { data, onChange, onConnectionChange, viewport } = this.props;
     let newConnections = {
       ...data.connections
     };
@@ -139,14 +141,16 @@ class SceneGraph extends Component {
 
   handleRemoveConnection = (id) => {
     const { data, onConnectionChange, onChange } = this.props;
-    onConnectionChange('delete', {
-      [id]: data.connections[id],
-    })
-    onChange(update(this.props.data, {
-      connections: {
-        $set: _.omit(data.connections, id),
-      },
-    }));
+    if (data.connections[id]) {
+      onConnectionChange('delete', {
+        [id]: data.connections[id],
+      })
+      onChange(update(this.props.data, {
+        connections: {
+          $set: _.omit(data.connections, id),
+        },
+      }));
+    }
   }
 
   render() {
@@ -156,10 +160,12 @@ class SceneGraph extends Component {
       renderScene,
       renderSceneHeader,
       showConnections,
+      style,
+      viewport,
     } = this.props
 
     return (
-      <div>
+      <div style={style}>
         <Container
           connections={data.connections}
           onDragConnectionEnd={this.handleDragConnectionEnd}
@@ -173,7 +179,7 @@ class SceneGraph extends Component {
           updateConnectionStart={this.handleUpdateConnectionStart}
           updateConnectionEnd={this.handleUpdateConnectionEnd}
           updateScene={this.handleUpdateScene}
-          viewport={data.viewport}
+          viewport={viewport}
         />
         <CustomDragLayer
           connections={data.connections}
@@ -181,11 +187,12 @@ class SceneGraph extends Component {
           renderSceneHeader={renderSceneHeader}
           scenes={data.scenes}
           showConnections={showConnections}
-          viewport={data.viewport}
+          viewport={viewport}
         />
       </div>
     )
   }
 }
 
-export default DragDropContext(HTML5Backend)(SceneGraph)
+// export default DragDropContext(HTML5Backend)(SceneGraph)
+export default SceneGraph

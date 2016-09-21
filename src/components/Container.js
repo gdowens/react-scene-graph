@@ -7,6 +7,14 @@ import Connection from './Connection';
 import DraggableScene from './DraggableScene';
 import _ from 'lodash';
 
+const containerStyles = {
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  left: 0,
+  top: 0,
+};
+
 class Container extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
@@ -22,6 +30,7 @@ class Container extends Component {
     updateScene: PropTypes.func.isRequired,
     updateConnectionEnd: PropTypes.func.isRequired,
     updateConnectionStart: PropTypes.func.isRequired,
+    viewport: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -51,17 +60,17 @@ class Container extends Component {
   }
 
   handleDragConnectionStart = (scene, clickAbsolutePosition) => {
-    const { onDragConnectionStart } = this.props;
+    const { onDragConnectionStart, viewport } = this.props;
     const { sceneHeaderHeight } = this.state;
     const clickRelativePosition = {
-      x: clickAbsolutePosition.x - scene.x,
-      y: clickAbsolutePosition.y - scene.y - sceneHeaderHeight,
+      x: clickAbsolutePosition.x - scene.x - viewport.x,
+      y: clickAbsolutePosition.y - scene.y - viewport.y - sceneHeaderHeight,
     };
     const relativeStartLocation = onDragConnectionStart(scene, clickRelativePosition);
     const absoluteStartLocation = _.isEmpty(relativeStartLocation) ? null :
       {
-        x: relativeStartLocation.x + scene.x,
-        y: relativeStartLocation.y + scene.y + sceneHeaderHeight,
+        x: relativeStartLocation.x + scene.x + viewport.x,
+        y: relativeStartLocation.y + scene.y + viewport.y + sceneHeaderHeight,
       };
 
     this.setState({
@@ -71,12 +80,8 @@ class Container extends Component {
   }
 
   handleSceneDragChange = (draggedSceneId, isStartingDrag, delta) => {
-    const { onDragSceneEnd, scenes } = this.props;
+    const { scenes } = this.props;
     const draggedScene = scenes[draggedSceneId];
-
-    if (!isStartingDrag && delta) {
-      onDragSceneEnd(draggedScene, delta);
-    }
 
     this.setState({
       draggedScene: isStartingDrag ? draggedScene : {},
@@ -122,10 +127,12 @@ class Container extends Component {
 
     const { currentConnectionOrigin, draggedScene } = this.state;
 
+    if (draggedScene.id === scene.id)
+      return null
+
     return (
       <DraggableScene
         connectionLocation={currentConnectionOrigin}
-        draggedScene={draggedScene}
         key={scene.id}
         onDragConnectionEnd={onDragConnectionEnd}
         onDragConnectionStart={this.handleDragConnectionStart}
@@ -147,11 +154,10 @@ class Container extends Component {
       connections,
       scenes,
       showConnections,
-      viewport,
     } = this.props;
 
     return connectDropTarget(
-      <div>
+      <div style={containerStyles}>
         {Object.keys(scenes)
           .map(key => this.renderDraggableScene(scenes[key]))
         }
@@ -163,6 +169,13 @@ class Container extends Component {
   }
 }
 
-export default DropTarget(ItemTypes.SCENE, {}, connect => ({
+const dropfun = (props, monitor) => {
+  const delta = monitor.getDifferenceFromInitialOffset()
+  const scene = monitor.getItem()
+
+  props.onDragSceneEnd(scene, delta);
+}
+
+export default DropTarget(ItemTypes.SCENE, {drop: dropfun}, connect => ({
   connectDropTarget: connect.dropTarget()
 }))(Container)

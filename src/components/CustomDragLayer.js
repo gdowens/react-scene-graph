@@ -22,16 +22,15 @@ function getItemStyles(props) {
 
   let { x, y } = currentSourceOffset;
 
-  const transform = `translate(${x}px, ${y}px)`;
   return {
-    transform: transform,
-    WebkitTransform: transform,
+    left: x,
+    top: y,
     position: 'absolute',
   };
 }
 
 function getModifiedScene(props, id) {
-  const { currentSourceOffset, initialSourceOffset, item, scenes } = props;
+  const { currentSourceOffset, initialSourceOffset, item, scenes, viewport } = props;
 
   if (!initialSourceOffset || !currentSourceOffset) {
     return item;
@@ -95,7 +94,7 @@ class CustomDragLayer extends Component {
   }
 
   renderConnection(connection) {
-    const { currentSourceOffset, initialSourceOffset, item } = this.props;
+    const { currentSourceOffset, initialSourceOffset, item, viewport } = this.props;
 
     const fromScene = getModifiedScene(this.props, connection.from);
     const toScene = getModifiedScene(this.props, connection.to);
@@ -134,7 +133,7 @@ class CustomDragLayer extends Component {
   }
 
   renderExistingConnectionBeingDragged = (isStart) => {
-    const { currentOffset, initialOffset, item, scenes, viewport } = this.props;
+    const { currentOffset, initialOffset, item, scenes } = this.props;
     const endScene = scenes[item.to];
     const startingLoc = isStart ? currentOffset : {x: item.startX, y: item.startY}
     const endingVertOffset = this.getEndingVertOffset(item, endScene);
@@ -161,7 +160,6 @@ class CustomDragLayer extends Component {
       renderScene,
       renderSceneHeader,
       showConnections,
-      viewport,
     } = this.props;
 
     if (!isDragging || !currentSourceOffset || !initialSourceOffset) {

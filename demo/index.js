@@ -14,8 +14,8 @@ export default class Demo extends Component {
     },
     connections: {},
     viewport: {
-      x: 500,
-      y: 500,
+      x: 0,
+      y: 0,
       width: 1500,
       height: 1500,
     },

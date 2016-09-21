@@ -8,7 +8,6 @@ import SceneHeader from './SceneHeader';
 class DraggableScene extends Component {
   static propTypes = {
     connectionLocation: PropTypes.object,
-    draggedScene: PropTypes.object.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
     onDragConnectionEnd: PropTypes.func.isRequired,
     updateConnectionStart: PropTypes.func.isRequired,
@@ -35,7 +34,6 @@ class DraggableScene extends Component {
     const {
       connectDropTarget,
       connectionLocation,
-      draggedScene,
       onSceneDragChange,
       onSceneHeaderRef,
       onTargetlessConnectionDrop,
@@ -44,15 +42,10 @@ class DraggableScene extends Component {
       scene,
     } = this.props;
 
-    if(draggedScene.id === scene.id) {
-      return null;
-    }
-
-    const transform = `translate3d(${scene.x}px, ${scene.y}px, 0)`;
     const styles = {
       position: 'absolute',
-      transform: transform,
-      WebkitTransform: transform,
+      left: scene.x,
+      top: scene.y,
     };
 
     return connectDropTarget(

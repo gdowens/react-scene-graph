@@ -3,5 +3,4 @@ export default {
   CONNECTION_START: 'connection_start',
   CONNECTION_END: 'connection_end',
   SCENE: 'scene',
-  VIEWPORT: 'viewport',
 };
