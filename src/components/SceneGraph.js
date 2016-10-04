@@ -50,7 +50,7 @@ class SceneGraph extends Component {
 
   handleDragSceneEnd = (scene, delta) => {
     const { data, onChange, onConnectionChange } = this.props;
-    const updatedConnections = []
+    const updatedConnections = {}
     const newConnections = _.mapValues(data.connections, (connection) => {
       if (connection.from === scene.id) {
         const updatedConnection = {
@@ -65,8 +65,9 @@ class SceneGraph extends Component {
       }
     });
 
-    if (updatedConnections.length)
+    if (Object.keys(updatedConnections).length) {
       onConnectionChange('update', updatedConnections);
+    }
     onChange(update(data, {
       scenes: {
         [scene.id]: {
