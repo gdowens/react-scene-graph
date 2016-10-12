@@ -13,15 +13,28 @@ class DraggableScene extends Component {
     updateConnectionStart: PropTypes.func.isRequired,
     updateConnectionEnd: PropTypes.func.isRequired,
     onSceneDragChange: PropTypes.func.isRequired,
-    onSceneHeaderRef: PropTypes.func.isRequired,
+    onSceneHeaderHeight: PropTypes.func.isRequired,
     onTargetlessConnectionDrop: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
     renderSceneHeader: PropTypes.func.isRequired,
     scene: PropTypes.object.isRequired,
+    scaledScene: PropTypes.object.isRequired,
+    scale: PropTypes.number.isRequired,
   };
 
-  componentWillMount() {
-    this.firedHeaderRef = false;
+  componentDidMount() {
+    this.updateSceneHeaderHeight();
+  }
+
+  componentDidUpdate() {
+    this.updateSceneHeaderHeight();
+  }
+
+  updateSceneHeaderHeight = () => {
+    const {onSceneHeaderHeight, scaledScene} = this.props;
+    const totalHeight = this.sceneHeader.getBoundingClientRect().height;
+
+    onSceneHeaderHeight(totalHeight - scaledScene.height);
   }
 
   handleSceneMouseDown = (event) => {
@@ -35,32 +48,31 @@ class DraggableScene extends Component {
       connectDropTarget,
       connectionLocation,
       onSceneDragChange,
-      onSceneHeaderRef,
+      onSceneHeaderHeight,
       onTargetlessConnectionDrop,
       renderScene,
       renderSceneHeader,
       scene,
+      scale,
+      scaledScene,
     } = this.props;
 
     const styles = {
       position: 'absolute',
-      left: scene.x,
-      top: scene.y,
+      left: scaledScene.x,
+      top: scaledScene.y,
     };
 
     return connectDropTarget(
       <div
-        ref={(node) => {
-          if(node && !this.firedHeaderRef && scene.height > 0) {
-            this.firedHeaderRef = true;
-            onSceneHeaderRef(node.getBoundingClientRect().height - scene.height);
-          }
-        }}
-        style={styles}>
+        ref={(ref) => this.sceneHeader = ref}
+        style={styles}
+      >
         <SceneHeader
           key={`${scene.id}header`}
           renderSceneHeader={renderSceneHeader}
           scene={scene}
+          scale={scale}
           onSceneDragChange={onSceneDragChange}
         />
         <div onMouseDown={this.handleSceneMouseDown}>
@@ -69,6 +81,7 @@ class DraggableScene extends Component {
             key={scene.id}
             renderScene={renderScene}
             scene={scene}
+            scale={scale}
             onTargetlessConnectionDrop={onTargetlessConnectionDrop}
           />
         </div>

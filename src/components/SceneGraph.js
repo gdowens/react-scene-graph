@@ -5,9 +5,11 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import CustomDragLayer from './CustomDragLayer'
 import Container from './Container'
 import getUUID from '../utils/getUUID'
+import * as ViewportUtils from '../utils/viewport'
 
 class SceneGraph extends Component {
   static propTypes = {
+    focused: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onDragConnectionStart: PropTypes.func.isRequired,
     renderScene: PropTypes.func.isRequired,
@@ -16,13 +18,22 @@ class SceneGraph extends Component {
     onConnectionChange: PropTypes.func,
     showConnections: PropTypes.bool,
     style: PropTypes.object,
+    onViewportChange: PropTypes.func,
     viewport: PropTypes.object.isRequired,
+    zoomFactor: PropTypes.number,
+    zoomSensitivity: PropTypes.number,
+    scrollSensitivity: PropTypes.number,
   }
 
   static defaultProps = {
     data: {},
+    focused: true,
+    zoomFactor: 2,
+    zoomSensitivity: 1,
+    scrollSensitivity: 1,
     showConnections: true,
     onConnectionChange: () => {},
+    onViewportChange: () => {},
   };
 
   handleDragConnectionEnd = (sourceScene, sourceInitialOffset, targetScene) => {
@@ -48,15 +59,16 @@ class SceneGraph extends Component {
     }));
   }
 
-  handleDragSceneEnd = (scene, delta) => {
-    const { data, onChange, onConnectionChange } = this.props;
+  handleDragSceneEnd = ({id}, delta) => {
+    const { data, onChange, onConnectionChange, viewport } = this.props;
+    const scene = data.scenes[id]
     const updatedConnections = {}
     const newConnections = _.mapValues(data.connections, (connection) => {
-      if (connection.from === scene.id) {
+      if (connection.from === id) {
         const updatedConnection = {
           ...connection,
-          startX: connection.startX + delta.x,
-          startY: connection.startY + delta.y,
+          startX: connection.startX + (delta.x / viewport.scale),
+          startY: connection.startY + (delta.y / viewport.scale),
         };
         updatedConnections[connection.id] = updatedConnection;
         return updatedConnection;
@@ -68,11 +80,12 @@ class SceneGraph extends Component {
     if (Object.keys(updatedConnections).length) {
       onConnectionChange('update', updatedConnections);
     }
+    
     onChange(update(data, {
       scenes: {
         [scene.id]: {
-          x: { $set: scene.x + delta.x },
-          y: { $set: scene.y + delta.y },
+          x: { $set: scene.x + (delta.x / viewport.scale) },
+          y: { $set: scene.y + (delta.y / viewport.scale) },
         },
       },
       connections: { $set: newConnections },
@@ -153,10 +166,76 @@ class SceneGraph extends Component {
       }));
     }
   }
+  
+  moveViewport = (delta) => {
+    const {viewport} = this.props;
+    const newViewport = ViewportUtils.move(viewport, delta);
+    
+    this.props.onViewportChange(newViewport);
+  }
+  
+  zoomViewport = (factor) => {
+    const {viewport} = this.props;
+    const newViewport = ViewportUtils.zoom(viewport, factor);
+    
+    this.props.onViewportChange(newViewport);
+  }
+  
+  handleKeyDown = (e) => {  
+    const {focused, zoomFactor} = this.props;
+    
+    if (
+      focused &&
+      e.metaKey &&
+      (e.code === 'Equal' || e.code === 'Minus')
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (e.code === 'Equal') {
+        this.zoomViewport(zoomFactor);
+      } else {
+        this.zoomViewport(1 / zoomFactor);
+      }
+    }
+  }
+  
+  handleWheel = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const {deltaX, deltaY} = e;
+    const {zoomSensitivity, scrollSensitivity} = this.props;
+    
+    // Zoom (ctrlKey indicates zoom)
+    if (e.ctrlKey) {
+      
+      // Negative deltaY means zoom out, positive means zoom in.
+      // We subtract this delta from 1, since we later multiply by 
+      // the current viewport scale.
+      this.zoomViewport(1 - (deltaY / 100) * zoomSensitivity);
+      
+    // Pan
+    } else {
+      this.moveViewport({
+        x: (-deltaX / 3) * scrollSensitivity, 
+        y: (-deltaY / 3) * scrollSensitivity,
+      });
+    }
+  }
+  
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown);
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
 
   render() {
     const {
       data,
+      focused,
       onDragConnectionStart,
       renderScene,
       renderSceneHeader,
@@ -166,12 +245,17 @@ class SceneGraph extends Component {
     } = this.props
 
     return (
-      <div style={style}>
+      <div 
+        style={style}
+        onWheel={this.handleWheel}
+      >
         <Container
+          captureEvents={focused}
           connections={data.connections}
           onDragConnectionEnd={this.handleDragConnectionEnd}
           onDragConnectionStart={onDragConnectionStart}
           onDragSceneEnd={this.handleDragSceneEnd}
+          onPanMove={this.moveViewport}
           onTargetlessConnectionDrop={this.handleRemoveConnection}
           renderScene={renderScene}
           renderSceneHeader={renderSceneHeader}
