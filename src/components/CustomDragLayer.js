@@ -178,25 +178,27 @@ class CustomDragLayer extends Component {
       return this.renderExistingConnectionBeingDragged(true);
     } else if (itemType === ItemTypes.CONNECTION_END) {
       return this.renderExistingConnectionBeingDragged(false);
-    }
+    } else if (itemType === ItemTypes.SCENE) {
+      const connectionsInMotion = _.filter(connections, (connection) => {
+        return [connection.from, connection.to].includes(item.id);
+      });
 
-    const connectionsInMotion = _.filter(connections, (connection) => {
-      return [connection.from, connection.to].includes(item.id);
-    });
-
-    const itemStyle = getItemStyles(this.props);
-    const renderData = {id: item.id, scale: viewport.scale};
-    return (
-      <div style={layerStyles}>
-        <div style={itemStyle}>
-          {renderSceneHeader(renderData)}
-          {renderScene(renderData)}
+      const itemStyle = getItemStyles(this.props);
+      const renderData = {id: item.id, scale: viewport.scale};
+      return (
+        <div style={layerStyles}>
+          <div style={itemStyle}>
+            {renderSceneHeader(renderData)}
+            {renderScene(renderData)}
+          </div>
+            {showConnections && Object.keys(connectionsInMotion)
+              .map(key => this.renderConnection(connectionsInMotion[key]))
+            }
         </div>
-          {showConnections && Object.keys(connectionsInMotion)
-            .map(key => this.renderConnection(connectionsInMotion[key]))
-          }
-      </div>
-    );
+      );
+    } else {
+      return null
+    }
   }
 }
 
